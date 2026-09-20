@@ -22,8 +22,8 @@ public class EmployeeController {
 
     // 1. GET API - Fetch all employees
     @GetMapping
-    public ApiResponse getEmployees() {
-        return new ApiResponse("Employees fetched successfully", 200, employeeService.getAllEmployees());
+    public ApiResponse getEmployees(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        return new ApiResponse("Employees fetched successfully", 200, employeeService.getAllEmployees(page , size));
     }
 
     // 2. GET API - Fetch employee by ID

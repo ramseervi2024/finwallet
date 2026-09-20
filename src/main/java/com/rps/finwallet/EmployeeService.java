@@ -1,5 +1,8 @@
 package com.rps.finwallet;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.rps.finwallet.dto.EmployeeRequest;
 
@@ -13,8 +16,9 @@ public class EmployeeService {
         this.employeeRepository=employeeRepository;
     }
 
-    public List<Employee> getAllEmployees(){
-        return employeeRepository.findAll();
+    public Page<Employee> getAllEmployees(int pageNumber, int pageSize){
+        Pageable pageable= PageRequest.of(pageNumber, pageSize);
+        return employeeRepository.findAll(pageable);
     }
 
     public Employee getEmployeeById(Long id){
