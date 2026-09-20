@@ -10,7 +10,7 @@ public class EmployeeController {
     @GetMapping
     public ApiResponse getEmployess() {
         return new ApiResponse(
-                "Get API hit successfully", 200);
+                "Get API hit successfully Hello", 200);
     }
     @GetMapping("/getemployeeslist")
     public ApiResponse getEmployessList() {
