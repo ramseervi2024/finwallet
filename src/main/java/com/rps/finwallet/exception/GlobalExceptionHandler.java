@@ -2,9 +2,13 @@ package com.rps.finwallet.exception;
 
 import com.rps.finwallet.ApiResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -52,6 +56,21 @@ public class GlobalExceptionHandler {
 
         return new ApiResponse<>(
                 "Something went wrong",
+                500);
+    }
+
+    // FOr Any Validation Error Handle
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<Void> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+
+        List<String> errors=ex.getBindingResult().getFieldErrors().
+                stream().map(error->error.getDefaultMessage())
+                .collect(Collectors.toList());
+        String errorMessage= String.join(", ", errors);
+
+        return new ApiResponse<>(errorMessage,
                 500);
     }
 }

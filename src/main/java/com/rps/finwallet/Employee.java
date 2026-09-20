@@ -1,6 +1,7 @@
 package com.rps.finwallet;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name="employees")
@@ -9,7 +10,10 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank(message="Name cannot be empty")
     private String name;
+    @Email(message="Invalid email formate")
+    @NotBlank(message="Email is Mandatory")
     private String email;
     private String department;
 

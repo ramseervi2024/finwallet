@@ -1,5 +1,6 @@
 package com.rps.finwallet;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class EmployeeController {
 
     // 3. POST API - Create a new employee
     @PostMapping
-    public ApiResponse createEmployee(@RequestBody Employee employee) {
+    public ApiResponse createEmployee(@Valid @RequestBody Employee employee) {
 //        employees.add(employee);
         return new ApiResponse("Employee created successfully: " + employee.getName(), 200, employeeService.createEmployee(employee));
     }
