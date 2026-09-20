@@ -1,5 +1,6 @@
 package com.rps.finwallet;
 
+import com.rps.finwallet.dto.EmployeeRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +39,7 @@ public class EmployeeController {
 
     // 3. POST API - Create a new employee
     @PostMapping
-    public ApiResponse createEmployee(@Valid @RequestBody Employee request) {
+    public ApiResponse createEmployee(@Valid @RequestBody EmployeeRequest request) {
 //        employees.add(employee);
         Employee employee=new Employee();
         employee.setName(request.getName());
@@ -51,7 +52,7 @@ public class EmployeeController {
 
     // 4. PUT API - Update an existing employee
     @PutMapping("/{id}")
-    public ApiResponse updateEmployee(@PathVariable Long id, @RequestBody Employee updatedEmployee) {
+    public ApiResponse updateEmployee(@PathVariable Long id,@Valid @RequestBody EmployeeRequest updatedEmployee) {
 //        Employee employee = employees.stream()
 //                .filter(emp -> emp.getId().equals(id))
 //                .findFirst()

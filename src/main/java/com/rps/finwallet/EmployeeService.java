@@ -1,6 +1,7 @@
 package com.rps.finwallet;
 
 import org.springframework.stereotype.Service;
+import com.rps.finwallet.dto.EmployeeRequest;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public Employee updateEmployee(Long id, Employee updatedEmployee){
+    public Employee updateEmployee(Long id, EmployeeRequest updatedEmployee){
         Employee employee = getEmployeeById(id);
 
         employee.setName(updatedEmployee.getName());
