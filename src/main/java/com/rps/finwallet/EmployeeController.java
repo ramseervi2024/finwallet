@@ -38,8 +38,14 @@ public class EmployeeController {
 
     // 3. POST API - Create a new employee
     @PostMapping
-    public ApiResponse createEmployee(@Valid @RequestBody Employee employee) {
+    public ApiResponse createEmployee(@Valid @RequestBody Employee request) {
 //        employees.add(employee);
+        Employee employee=new Employee();
+        employee.setName(request.getName());
+        employee.setEmail(request.getEmail());
+        employee.setDepartment(request.getDepartment());
+
+
         return new ApiResponse("Employee created successfully: " + employee.getName(), 200, employeeService.createEmployee(employee));
     }
 
