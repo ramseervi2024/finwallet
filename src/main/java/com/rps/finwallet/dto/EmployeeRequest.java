@@ -12,13 +12,7 @@ public class EmployeeRequest {
         this.name = name;
     }
 
-    public String getDepartment() {
-        return department;
-    }
 
-    public void setDepartment(String department) {
-        this.department = department;
-    }
 
     public String getEmail() {
         return email;
@@ -35,7 +29,15 @@ public class EmployeeRequest {
     @NotBlank(message="Email is Mandotory")
     private String email;
 
-    private String department;
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    private Long departmentId;
 
 
 }

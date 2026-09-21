@@ -11,9 +11,11 @@ import java.util.List;
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final DepartmentRepository departmentRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository){
+    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository){
         this.employeeRepository=employeeRepository;
+        this.departmentRepository=departmentRepository;
     }
 
     public Page<Employee> getAllEmployees(int pageNumber, int pageSize){
@@ -26,7 +28,17 @@ public class EmployeeService {
                 .orElseThrow(()-> new RuntimeException("Employee not fount with ID: " + id));
     }
 
-    public Employee createEmployee(Employee employee){
+    public Employee createEmployee(EmployeeRequest request){
+        Employee employee=new Employee();
+        employee.setName(request.getName());
+        employee.setEmail(request.getEmail());
+
+        if(request.getDepartmentId() !=null){
+            Department dept=departmentRepository.findById(request.getDepartmentId()).orElseThrow(()->
+                    new RuntimeException("Department not found!"));
+            employee.setDepartment(dept);
+        }
+
         return employeeRepository.save(employee);
     }
 
@@ -35,7 +47,11 @@ public class EmployeeService {
 
         employee.setName(updatedEmployee.getName());
         employee.setEmail(updatedEmployee.getEmail());
-        employee.setDepartment(updatedEmployee.getDepartment());
+        if(updatedEmployee.getDepartmentId() !=null){
+            Department dept=departmentRepository.findById(updatedEmployee.getDepartmentId()).orElseThrow(()->
+                    new RuntimeException("Department not found!"));
+            employee.setDepartment(dept);
+        }
 
         return employeeRepository.save(employee);
     }

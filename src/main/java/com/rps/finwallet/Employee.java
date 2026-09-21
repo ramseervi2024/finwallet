@@ -15,12 +15,15 @@ public class Employee {
     @Email(message="Invalid email formate")
     @NotBlank(message="Email is Mandatory")
     private String email;
-    private String department;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     public Employee() {
     }
 
-    public Employee(Long id, String name, String email, String department) {
+    public Employee(Long id, String name, String email, Department department) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -52,10 +55,10 @@ public class Employee {
     }
 
     public String getDepartment() {
-        return department;
+        return department.toString();
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(Department department) {
         this.department = department;
     }
 
