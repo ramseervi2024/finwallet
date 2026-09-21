@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
-    
-//    // In-memory list to store employees temporarily (act as a fake database)
-//    private final List<Employee> employees = new ArrayList<>();
 
     private final EmployeeService employeeService;
 
@@ -29,11 +26,6 @@ public class EmployeeController {
     // 2. GET API - Fetch employee by ID
     @GetMapping("/{id}")
     public ApiResponse getEmployeeById(@PathVariable Long id) {
-//        Employee employee = employees.stream()
-//                .filter(emp -> emp.getId().equals(id))
-//                .findFirst()
-//                .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + id));
-//
         return new ApiResponse("Employee fetched successfully", 200, employeeService.getEmployeeById(id));
     }
 
@@ -46,30 +38,24 @@ public class EmployeeController {
     // 4. PUT API - Update an existing employee
     @PutMapping("/{id}")
     public ApiResponse updateEmployee(@PathVariable Long id,@Valid @RequestBody EmployeeRequest updatedEmployee) {
-//        Employee employee = employees.stream()
-//                .filter(emp -> emp.getId().equals(id))
-//                .findFirst()
-//                .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + id));
-//
-//        // Updating the existing employee's details
-//        employee.setName(updatedEmployee.getName());
-//        employee.setEmail(updatedEmployee.getEmail());
-//        employee.setDepartment(updatedEmployee.getDepartment());
-//
         return new ApiResponse("Employee ID: " + id + " updated successfully", 200, employeeService.updateEmployee(id, updatedEmployee));
     }
 
     // 5. DELETE API - Delete an employee
     @DeleteMapping("/{id}")
     public ApiResponse deleteEmployee(@PathVariable Long id) {
-//        Employee employee = employees.stream()
-//                .filter(emp -> emp.getId().equals(id))
-//                .findFirst()
-//                .orElseThrow(() -> new RuntimeException("Employee not found with ID: " + id));
-//
-        // Removing from the list
-//        employees.remove(employee);
         employeeService.deleteEmployee(id);
         return new ApiResponse("Employee deleted successfully: " + id, 200);
+    }
+
+
+    @GetMapping("/department/{departmentId}")
+    public ApiResponse getEmployeesByDepartment(@PathVariable Long departmentId){
+        return new ApiResponse("Fetched employees for department", 200, employeeService.getEmployeesByDepartment(departmentId));
+    }
+
+    @GetMapping("/search")
+    public ApiResponse searchEmployees(@RequestParam String name){
+        return  new ApiResponse("Search results", 200, employeeService.searchEmployees(name));
     }
 }

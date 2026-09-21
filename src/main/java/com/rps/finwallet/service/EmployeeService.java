@@ -68,4 +68,12 @@ public class EmployeeService {
         employeeRepository.delete(employee);
     }
 
+
+    public List<Employee> getEmployeesByDepartment(Long departmentId){
+        return employeeRepository.findByDepartmentId(departmentId);
+    }
+
+    public  List<Employee> searchEmployees(String keyword){
+        return employeeRepository.searchEmployeesByName(keyword);
+    }
 }
