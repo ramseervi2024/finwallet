@@ -1,4 +1,4 @@
-package com.rps.finwallet.exception;
+package com.rps.finwallet.repository;
 
 import com.rps.finwallet.model.*;
 import com.rps.finwallet.repository.*;
@@ -7,9 +7,9 @@ import com.rps.finwallet.controller.*;
 import com.rps.finwallet.dto.*;
 import com.rps.finwallet.exception.*;
 
-public class ResourceNotFoundException extends RuntimeException {
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    public ResourceNotFoundException(String message) {
-        super(message);
-    }
+
+public interface EmployeeRepository extends  JpaRepository<Employee, Long>{
+
 }

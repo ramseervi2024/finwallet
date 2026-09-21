@@ -1,4 +1,11 @@
-package com.rps.finwallet;
+package com.rps.finwallet.model;
+
+import com.rps.finwallet.model.*;
+import com.rps.finwallet.repository.*;
+import com.rps.finwallet.service.*;
+import com.rps.finwallet.controller.*;
+import com.rps.finwallet.dto.*;
+import com.rps.finwallet.exception.*;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -54,8 +61,8 @@ public class Employee {
         this.email = email;
     }
 
-    public String getDepartment() {
-        return department.toString();
+    public Department getDepartment() {
+        return department;
     }
 
     public void setDepartment(Department department) {

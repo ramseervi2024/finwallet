@@ -1,4 +1,4 @@
-package com.rps.finwallet;
+package com.rps.finwallet.common;
 
 public class ApiResponse<T> {
 

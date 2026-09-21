@@ -1,4 +1,12 @@
-package com.rps.finwallet;
+package com.rps.finwallet.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rps.finwallet.model.*;
+import com.rps.finwallet.repository.*;
+import com.rps.finwallet.service.*;
+import com.rps.finwallet.controller.*;
+import com.rps.finwallet.dto.*;
+import com.rps.finwallet.exception.*;
 
 import jakarta.persistence.*;
 
@@ -45,6 +53,7 @@ public class Department {
     private String name;
     private String location;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "department", cascade=CascadeType.ALL)
     private List<Employee> employees;
 

@@ -1,4 +1,8 @@
-package com.rps.finwallet;
+package com.rps.finwallet.controller;
+
+import com.rps.finwallet.common.ApiResponse;
+import com.rps.finwallet.model.*;
+import com.rps.finwallet.service.*;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
