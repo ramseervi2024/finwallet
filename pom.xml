@@ -59,6 +59,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Spring Security for Authentication -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 		<!-- Thymeleaf for Server-Side UI / External Client Simulation -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

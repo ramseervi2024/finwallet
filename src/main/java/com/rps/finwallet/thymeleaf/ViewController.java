@@ -11,4 +11,9 @@ public class ViewController {
         // This maps to src/main/resources/templates/index.html
         return "index";
     }
+
+    @GetMapping("/login-password-encrypt")
+    public String loginPasswordEncrypt() {
+        return "login-password-encrypt";
+    }
 }

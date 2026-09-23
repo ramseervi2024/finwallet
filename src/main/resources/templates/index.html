@@ -60,46 +60,27 @@
             gap: 2rem;
         }
 
-        .header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
         .header-actions h2 { margin: 0; font-size: 1.25rem; color: var(--text-main); }
 
         .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1.25rem;
-            border-radius: 9999px;
-            font-weight: 500;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
-            display: inline-flex;
-            gap: 0.5rem;
-            align-items: center;
+            background: var(--primary); color: white; border: none;
+            padding: 0.5rem 1.25rem; border-radius: 9999px; font-weight: 500; font-size: 0.875rem;
+            cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
+            display: inline-flex; gap: 0.5rem; align-items: center; justify-content: center;
         }
         .btn:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 6px rgba(79, 70, 229, 0.4); }
         .btn:active { transform: translateY(0); }
         .btn.danger { background: var(--danger); box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3); }
         .btn.danger:hover { background: var(--danger-hover); box-shadow: 0 4px 6px rgba(220, 38, 38, 0.4); }
         
-        /* Action buttons for table rows */
         .btn-sm { padding: 0.25rem 0.75rem; font-size: 0.75rem; }
         .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); box-shadow: none; }
         .btn-outline:hover { background: var(--bg-color); color: var(--text-main); }
 
         .section-card {
-            background: var(--surface);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
+            background: var(--surface); border-radius: 16px; padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); transition: transform 0.3s ease;
         }
 
         .table-container { overflow-x: auto; }
@@ -111,7 +92,6 @@
         tbody tr:hover { background-color: #F9FAFB; }
         
         .action-cell { display: flex; gap: 0.5rem; justify-content: flex-end; }
-
         .badge { background: #E0E7FF; color: #3730A3; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
 
         .loading, .error-msg, .empty-msg { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.875rem; }
@@ -119,49 +99,43 @@
 
         /* Modal Styles */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 50;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 50;
+            align-items: center; justify-content: center;
         }
         .modal {
-            background: var(--surface);
-            border-radius: 16px;
-            width: 100%;
-            max-width: 500px;
-            padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            background: var(--surface); border-radius: 16px; width: 100%; max-width: 500px;
+            padding: 2rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
         .modal h3 { margin-top: 0; margin-bottom: 1.5rem; font-size: 1.25rem; }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--text-main); }
         .form-control {
-            width: 100%; padding: 0.75rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.875rem;
-            box-sizing: border-box;
-            font-family: inherit;
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px;
+            font-size: 0.875rem; box-sizing: border-box; font-family: inherit;
         }
         .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
         .modal-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
 
+        /* Auth Container specific */
+        .auth-container { max-width: 400px; margin: 4rem auto; text-align: center; }
+        .auth-tabs { display: flex; margin-bottom: 1rem; border-bottom: 1px solid var(--border); }
+        .auth-tab { flex: 1; padding: 1rem; cursor: pointer; font-weight: 600; color: var(--text-muted); transition: color 0.2s; }
+        .auth-tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
         <h1>FinWallet API Dashboard</h1>
-        <div class="text-sm" style="color: var(--text-muted); font-size: 0.875rem;">
-            Powered by Thymeleaf & Vanilla JS
+        <div class="text-sm" style="color: var(--text-muted); font-size: 0.875rem; display: flex; gap: 1rem; align-items: center;">
+            <span id="user-info">Not logged in</span>
+            <button class="btn btn-sm btn-outline" id="logout-btn" style="display: none;" onclick="logout()">Logout</button>
         </div>
     </nav>
 
-    <div class="container">
+    <!-- DASHBOARD SCREEN -->
+    <div class="container" id="dashboard-screen">
         <!-- Employees Section -->
         <div class="section-card">
             <div class="header-actions">
@@ -174,9 +148,7 @@
             <div class="table-container">
                 <table>
                     <thead>
-                        <tr>
-                            <th>ID</th><th>Name</th><th>Email</th><th>Department</th><th style="text-align: right;">Actions</th>
-                        </tr>
+                        <tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th style="text-align: right;">Actions</th></tr>
                     </thead>
                     <tbody id="employee-tbody"></tbody>
                 </table>
@@ -195,9 +167,7 @@
             <div class="table-container">
                 <table>
                     <thead>
-                        <tr>
-                            <th>ID</th><th>Name</th><th>Location</th><th style="text-align: right;">Actions</th>
-                        </tr>
+                        <tr><th>ID</th><th>Name</th><th>Location</th><th style="text-align: right;">Actions</th></tr>
                     </thead>
                     <tbody id="department-tbody"></tbody>
                 </table>
@@ -223,7 +193,6 @@
                     <label>Department</label>
                     <select id="emp-dept" class="form-control">
                         <option value="">None</option>
-                        <!-- Populated dynamically -->
                     </select>
                 </div>
                 <div class="modal-actions">
@@ -257,21 +226,51 @@
     </div>
 
     <script>
-        let departmentsList = [];
+        function logout() {
+            fetch('/api/auth/logout', { method: 'POST' })
+                .then(() => {
+                    window.location.href = '/login-password-encrypt';
+                });
+        }
 
-        // Utilities
+        function showDashboard() {
+            document.getElementById('user-info').innerText = 'Logged in';
+            document.getElementById('logout-btn').style.display = 'inline-flex';
+            
+            fetchDepartments();
+            fetchEmployees();
+        }
+
+        // Initialize App State
+        document.addEventListener('DOMContentLoaded', () => {
+            // Test if we are authenticated by pinging an API
+            fetch('/department')
+                .then(res => {
+                    if (res.status === 401 || res.status === 403) {
+                        // Not authenticated, redirect to login page
+                        window.location.href = '/login-password-encrypt';
+                    } else if (res.ok) {
+                        // Authenticated
+                        showDashboard();
+                    }
+                });
+        });
+
+        // ---- CRUD LOGIC ---- (Existing logic maintained)
+        let departmentsList = [];
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
 
-        // --------- DEPARTMENTS ---------
+        // Departments
         function fetchDepartments() {
-            fetch('/department')
-                .then(res => res.json())
-                .then(data => {
-                    departmentsList = data || [];
-                    renderDepartments(departmentsList);
-                    updateDepartmentDropdown(departmentsList);
-                }).catch(err => alert("Error fetching departments"));
+            fetch('/department').then(res => {
+                if(res.status === 401) { logout(); throw new Error("Unauthorized"); }
+                return res.json();
+            }).then(data => {
+                departmentsList = data || [];
+                renderDepartments(departmentsList);
+                updateDepartmentDropdown(departmentsList);
+            }).catch(err => console.error(err));
         }
 
         function renderDepartments(data) {
@@ -279,22 +278,16 @@
             if (!data.length) return tbody.innerHTML = `<tr><td colspan="4"><div class="empty-msg">No departments found.</div></td></tr>`;
             tbody.innerHTML = data.map(dept => `
                 <tr>
-                    <td><strong>#${dept.id}</strong></td>
-                    <td>${dept.name}</td>
-                    <td>${dept.location}</td>
-                    <td>
-                        <div class="action-cell">
-                            <button class="btn btn-sm btn-outline" onclick="openDepartmentModal(${dept.id}, '${dept.name}', '${dept.location}')">Edit</button>
-                            <button class="btn btn-sm danger" onclick="deleteDepartment(${dept.id})">Delete</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
+                    <td><strong>#${dept.id}</strong></td><td>${dept.name}</td><td>${dept.location}</td>
+                    <td><div class="action-cell">
+                        <button class="btn btn-sm btn-outline" onclick="openDepartmentModal(${dept.id}, '${dept.name}', '${dept.location}')">Edit</button>
+                        <button class="btn btn-sm danger" onclick="deleteDepartment(${dept.id})">Delete</button>
+                    </div></td>
+                </tr>`).join('');
         }
 
         function updateDepartmentDropdown(data) {
-            const select = document.getElementById('emp-dept');
-            select.innerHTML = '<option value="">None</option>' + 
+            document.getElementById('emp-dept').innerHTML = '<option value="">None</option>' + 
                 data.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
         }
 
@@ -309,60 +302,39 @@
         function saveDepartment(e) {
             e.preventDefault();
             const id = document.getElementById('dept-id').value;
-            const payload = {
-                name: document.getElementById('dept-name').value,
-                location: document.getElementById('dept-location').value
-            };
-            const method = id ? 'PUT' : 'POST';
-            const url = id ? `/department/${id}` : `/department`;
-
-            fetch(url, {
-                method, headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).then(() => {
-                closeModal('department-modal');
-                fetchDepartments();
-                fetchEmployees(); // Refresh employees in case department names changed
-            }).catch(err => alert("Error saving department"));
+            const payload = { name: document.getElementById('dept-name').value, location: document.getElementById('dept-location').value };
+            fetch(id ? `/department/${id}` : `/department`, {
+                method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            }).then(() => { closeModal('department-modal'); fetchDepartments(); fetchEmployees(); });
         }
 
         function deleteDepartment(id) {
-            if(!confirm("Are you sure? This deletes the department and all its employees!")) return;
-            fetch(`/department/${id}`, { method: 'DELETE' })
-                .then(() => { fetchDepartments(); fetchEmployees(); })
-                .catch(err => alert("Error deleting department"));
+            if(!confirm("Are you sure?")) return;
+            fetch(`/department/${id}`, { method: 'DELETE' }).then(() => { fetchDepartments(); fetchEmployees(); });
         }
 
-        // --------- EMPLOYEES ---------
+        // Employees
         function fetchEmployees() {
-            fetch('/employee')
-                .then(res => res.json())
-                .then(apiResponse => {
-                    const data = apiResponse?.data?.content || [];
-                    renderEmployees(data);
-                }).catch(err => alert("Error fetching employees"));
+            fetch('/employee').then(res => {
+                if(res.status === 401) { logout(); throw new Error("Unauthorized"); }
+                return res.json();
+            }).then(apiResponse => {
+                renderEmployees(apiResponse?.data?.content || []);
+            }).catch(err => console.error(err));
         }
 
         function renderEmployees(data) {
             const tbody = document.getElementById('employee-tbody');
             if (!data.length) return tbody.innerHTML = `<tr><td colspan="5"><div class="empty-msg">No employees found.</div></td></tr>`;
-            
-            tbody.innerHTML = data.map(emp => {
-                const deptId = emp.department ? emp.department.id : '';
-                return `
+            tbody.innerHTML = data.map(emp => `
                 <tr>
-                    <td><strong>#${emp.id}</strong></td>
-                    <td>${emp.name}</td>
-                    <td>${emp.email}</td>
+                    <td><strong>#${emp.id}</strong></td><td>${emp.name}</td><td>${emp.email}</td>
                     <td>${emp.department ? `<span class="badge">${emp.department.name}</span>` : `<span style="color:#9CA3AF; font-size:0.75rem;">None</span>`}</td>
-                    <td>
-                        <div class="action-cell">
-                            <button class="btn btn-sm btn-outline" onclick="openEmployeeModal(${emp.id}, '${emp.name}', '${emp.email}', '${deptId}')">Edit</button>
-                            <button class="btn btn-sm danger" onclick="deleteEmployee(${emp.id})">Delete</button>
-                        </div>
-                    </td>
-                </tr>
-            `}).join('');
+                    <td><div class="action-cell">
+                        <button class="btn btn-sm btn-outline" onclick="openEmployeeModal(${emp.id}, '${emp.name}', '${emp.email}', '${emp.department ? emp.department.id : ''}')">Edit</button>
+                        <button class="btn btn-sm danger" onclick="deleteEmployee(${emp.id})">Delete</button>
+                    </div></td>
+                </tr>`).join('');
         }
 
         function openEmployeeModal(id = '', name = '', email = '', deptId = '') {
@@ -378,37 +350,16 @@
             e.preventDefault();
             const id = document.getElementById('emp-id').value;
             const deptId = document.getElementById('emp-dept').value;
-            
-            const payload = {
-                name: document.getElementById('emp-name').value,
-                email: document.getElementById('emp-email').value,
-                departmentId: deptId ? parseInt(deptId) : null
-            };
-
-            const method = id ? 'PUT' : 'POST';
-            const url = id ? `/employee/${id}` : `/employee`;
-
-            fetch(url, {
-                method, headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).then(() => {
-                closeModal('employee-modal');
-                fetchEmployees();
-            }).catch(err => alert("Error saving employee"));
+            const payload = { name: document.getElementById('emp-name').value, email: document.getElementById('emp-email').value, departmentId: deptId ? parseInt(deptId) : null };
+            fetch(id ? `/employee/${id}` : `/employee`, {
+                method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+            }).then(() => { closeModal('employee-modal'); fetchEmployees(); });
         }
 
         function deleteEmployee(id) {
-            if(!confirm("Are you sure you want to delete this employee?")) return;
-            fetch(`/employee/${id}`, { method: 'DELETE' })
-                .then(() => fetchEmployees())
-                .catch(err => alert("Error deleting employee"));
+            if(!confirm("Are you sure?")) return;
+            fetch(`/employee/${id}`, { method: 'DELETE' }).then(() => fetchEmployees());
         }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchDepartments(); // Also populates the dropdown
-            fetchEmployees();
-        });
     </script>
 </body>
 </html>
