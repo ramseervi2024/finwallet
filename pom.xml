@@ -59,6 +59,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Thymeleaf for Server-Side UI / External Client Simulation -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
 		<!-- DevTools for Live Reload (Auto Restart) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinWallet Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-color: #F3F4F6;
+            --surface: #FFFFFF;
+            --text-main: #111827;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #4F46E5, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-actions h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--text-main);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .section-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg-color);
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+        }
+
+        th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 0.875rem;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #F9FAFB;
+        }
+
+        .badge {
+            background: #E0E7FF;
+            color: #3730A3;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .loading, .error-msg, .empty-msg {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .error-msg {
+            color: #DC2626;
+            background: #FEE2E2;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(79, 70, 229, 0.2);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>FinWallet API Dashboard</h1>
+        <div class="text-sm" style="color: var(--text-muted); font-size: 0.875rem;">
+            Powered by Thymeleaf & Vanilla JS
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <!-- Employees Section (Assuming you meant Employee since School API doesn't exist) -->
+        <div class="section-card">
+            <div class="header-actions">
+                <h2>Employees Directory</h2>
+                <button class="btn" onclick="fetchEmployees()">Refresh Data</button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employee-tbody">
+                        <tr>
+                            <td colspan="4">
+                                <div class="empty-msg">Click "Refresh Data" to load employees.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Departments Section -->
+        <div class="section-card">
+            <div class="header-actions">
+                <h2>Departments Directory</h2>
+                <button class="btn" onclick="fetchDepartments()">Refresh Data</button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody id="department-tbody">
+                        <tr>
+                            <td colspan="3">
+                                <div class="empty-msg">Click "Refresh Data" to load departments.</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const renderLoading = (colSpan) => `
+            <tr>
+                <td colspan="${colSpan}">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Fetching data...
+                    </div>
+                </td>
+            </tr>
+        `;
+
+        const renderError = (colSpan, errorMsg) => `
+            <tr>
+                <td colspan="${colSpan}">
+                    <div class="error-msg">Failed to load data: ${errorMsg}</div>
+                </td>
+            </tr>
+        `;
+
+        const renderEmpty = (colSpan, text) => `
+            <tr>
+                <td colspan="${colSpan}">
+                    <div class="empty-msg">${text}</div>
+                </td>
+            </tr>
+        `;
+
+        function fetchEmployees() {
+            const tbody = document.getElementById('employee-tbody');
+            tbody.innerHTML = renderLoading(4);
+
+            fetch('/employee')
+                .then(res => {
+                    if (!res.ok) throw new Error(res.statusText);
+                    return res.json();
+                })
+                .then(apiResponse => {
+                    // The Employee API returns ApiResponse -> data -> content (since it is a Page)
+                    const data = apiResponse?.data?.content || [];
+                    
+                    if (!data || data.length === 0) {
+                        tbody.innerHTML = renderEmpty(4, 'No employees found.');
+                        return;
+                    }
+                    tbody.innerHTML = data.map(emp => `
+                        <tr>
+                            <td><strong>#${emp.id || '-'}</strong></td>
+                            <td>${emp.name || '-'}</td>
+                            <td>${emp.email || '-'}</td>
+                            <td>
+                                ${emp.department && emp.department.name 
+                                    ? `<span class="badge">${emp.department.name}</span>` 
+                                    : `<span style="color:#9CA3AF; font-size:0.75rem;">None</span>`}
+                            </td>
+                        </tr>
+                    `).join('');
+                })
+                .catch(err => {
+                    tbody.innerHTML = renderError(4, err.message);
+                });
+        }
+
+        function fetchDepartments() {
+            const tbody = document.getElementById('department-tbody');
+            tbody.innerHTML = renderLoading(3);
+
+            fetch('/department')
+                .then(res => {
+                    if (!res.ok) throw new Error(res.statusText);
+                    return res.json();
+                })
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        tbody.innerHTML = renderEmpty(3, 'No departments found.');
+                        return;
+                    }
+                    tbody.innerHTML = data.map(dept => `
+                        <tr>
+                            <td><strong>#${dept.id || '-'}</strong></td>
+                            <td>${dept.name || '-'}</td>
+                            <td>${dept.location || '-'}</td>
+                        </tr>
+                    `).join('');
+                })
+                .catch(err => {
+                    tbody.innerHTML = renderError(3, err.message);
+                });
+        }
+
+        // Auto-fetch on initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchEmployees();
+            fetchDepartments();
+        });
+    </script>
+</body>
+</html>
