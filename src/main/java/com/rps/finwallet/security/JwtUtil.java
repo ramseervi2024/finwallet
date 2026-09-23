@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -13,17 +14,24 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    // Ideally, this should be in application.properties and loaded via @Value,
-    // but we use a fixed secure key for simplicity in this demo.
-    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private static final long JWT_EXPIRATION_MS = 86400000; // 24 hours
+    private final Key key;
+    private final long expiration;
+
+    public JwtUtil(@Value("${jwt.secret}") String secret,
+                   @Value("${jwt.expiration}") long expiration) {
+        // Decode the provided secret key.
+        // JJWT provides a utility to create a Key instance from a base64 encoded string.
+        byte[] keyBytes = io.jsonwebtoken.io.Decoders.BASE64.decode(secret);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.expiration = expiration;
+    }
 
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_MS))
-                .signWith(SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(key)
                 .compact();
     }
 
@@ -42,7 +50,7 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(SECRET_KEY)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
