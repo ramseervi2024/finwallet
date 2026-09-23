@@ -30,4 +30,9 @@ public class DepartmentController {
         departmentService.deleteDepartment(id);
         return new ApiResponse("Department ID " + id + " and all its employees deleted successfully!", 200);
     }
+
+    @PutMapping("/{id}")
+    public Department updateDepartment(@PathVariable Long id, @RequestBody Department department) {
+        return departmentService.updateDepartment(id, department);
+    }
 }
