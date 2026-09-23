@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload | FinWallet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-light: #818CF8;
+            --primary-hover: #4338CA;
+            
+            --secondary: #0EA5E9;
+            --secondary-light: #38BDF8;
+            --secondary-hover: #0284C7;
+            
+            --success: #10B981;
+            --error: #EF4444;
+            --bg-color: #F8FAFC;
+            --surface: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --border-hover: #CBD5E1;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #F0F4FF 0%, #F8FAFC 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-container {
+            display: flex;
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            padding: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .upload-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .upload-card.primary {
+            border-top: 6px solid var(--primary);
+        }
+
+        .upload-card.secondary {
+            border-top: 6px solid var(--secondary);
+        }
+
+        .upload-card h2 {
+            margin: 0 0 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .upload-card p {
+            margin: 0 0 2rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            min-height: 45px;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--border-hover);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            background: rgba(248, 250, 252, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .drop-zone.primary-zone:hover, .drop-zone.primary-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+            transform: scale(1.02);
+        }
+
+        .drop-zone.secondary-zone:hover, .drop-zone.secondary-zone.dragover {
+            border-color: var(--secondary);
+            background: rgba(14, 165, 233, 0.05);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .primary-zone .upload-icon {
+            background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+            color: var(--primary);
+        }
+
+        .secondary-zone .upload-icon {
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+            color: var(--secondary);
+        }
+
+        .drop-zone:hover .upload-icon {
+            transform: translateY(-5px);
+        }
+
+        .drop-zone svg { width: 32px; height: 32px; }
+
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .drop-zone-text {
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .drop-zone-subtext {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .selected-file-container {
+            display: none;
+            margin-top: 1.5rem;
+            background: var(--bg-color);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid var(--border);
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .selected-file-icon { margin-right: 1rem; }
+        .primary .selected-file-icon { color: var(--primary); }
+        .secondary .selected-file-icon { color: var(--secondary); }
+
+        .file-details {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .file-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-size {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .remove-file {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .remove-file:hover {
+            color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .btn-upload {
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            transition: all 0.2s;
+            display: none;
+            font-family: inherit;
+        }
+
+        .primary .btn-upload { background: var(--primary); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); }
+        .primary .btn-upload:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35); }
+        
+        .secondary .btn-upload { background: var(--secondary); box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25); }
+        .secondary .btn-upload:hover { background: var(--secondary-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35); }
+
+        .btn-upload:active { transform: translateY(0); }
+
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status-message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            display: block;
+        }
+
+        .status-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            display: block;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--primary); }
+
+        .db-badge {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+
+        .fs-badge {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--border);
+            border-radius: 4px;
+            margin-top: 1rem;
+            overflow: hidden;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--secondary);
+            transition: width 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/ui" class="back-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back to Dashboard
+    </a>
+
+    <div class="upload-container">
+        
+        <!-- CARD 1: DOCUMENT UPLOADER (Max 10MB) -->
+        <div class="upload-card primary">
+            <h2>Document Upload</h2>
+            <p>Upload small files like PDFs or Images.<br>
+            <span class="db-badge">Saves to MySQL Database & Filesystem</span></p>
+
+            <div class="drop-zone primary-zone" id="dropZoneDoc">
+                <div class="upload-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="12" y2="12"/><line x1="15" y1="15" x2="12" y2="12"/></svg>
+                </div>
+                <div class="drop-zone-text">Drop Document Here</div>
+                <div class="drop-zone-subtext">Max Size: 10 MB</div>
+                <input type="file" id="fileInputDoc" class="file-input">
+            </div>
+
+            <div class="selected-file-container" id="fileContainerDoc">
+                <div class="selected-file-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                </div>
+                <div class="file-details">
+                    <div class="file-name" id="fileNameDoc"></div>
+                    <div class="file-size" id="fileSizeDoc"></div>
+                </div>
+                <button class="remove-file" onclick="removeFile('doc')" title="Remove file">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+
+            <button class="btn-upload" id="uploadBtnDoc" onclick="uploadFile('doc', '/api/files/upload/document')">Upload to Database</button>
+            <div id="statusMessageDoc" class="status-message"></div>
+        </div>
+
+        <!-- CARD 2: VIDEO / LARGE FILE UPLOADER (Max 1GB) -->
+        <div class="upload-card secondary">
+            <h2>Large File Upload</h2>
+            <p>Upload large files like Videos or Archives.<br>
+            <span class="fs-badge">Saves to Filesystem ONLY (Bypasses DB)</span></p>
+
+            <div class="drop-zone secondary-zone" id="dropZoneVid">
+                <div class="upload-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                </div>
+                <div class="drop-zone-text">Drop Video/Large File Here</div>
+                <div class="drop-zone-subtext">Max Size: 1 GB</div>
+                <input type="file" id="fileInputVid" class="file-input">
+            </div>
+
+            <div class="selected-file-container" id="fileContainerVid">
+                <div class="selected-file-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+                </div>
+                <div class="file-details">
+                    <div class="file-name" id="fileNameVid"></div>
+                    <div class="file-size" id="fileSizeVid"></div>
+                </div>
+                <button class="remove-file" onclick="removeFile('vid')" title="Remove file">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+
+            <button class="btn-upload" id="uploadBtnVid" onclick="uploadFile('vid', '/api/files/upload/video')">Upload to Filesystem</button>
+            <div class="progress-container" id="progressContainerVid">
+                <div class="progress-bar" id="progressBarVid"></div>
+            </div>
+            <div id="statusMessageVid" class="status-message"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // Check JWT Auth
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) window.location.href = '/login-password-encrypt';
+        });
+
+        // Config limits
+        const config = {
+            doc: { maxSize: 10 * 1024 * 1024, name: '10 MB' }, // 10MB
+            vid: { maxSize: 1024 * 1024 * 1024, name: '1 GB' } // 1GB
+        };
+
+        // UI Binding function
+        function setupUploader(type) {
+            const dropZone = document.getElementById(`dropZone${type.charAt(0).toUpperCase() + type.slice(1)}`);
+            const fileInput = document.getElementById(`fileInput${type.charAt(0).toUpperCase() + type.slice(1)}`);
+            
+            // Drag Events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+            });
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+            });
+
+            // Handle selection
+            dropZone.addEventListener('drop', (e) => {
+                if (e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileSelection(type, e.dataTransfer.files[0]);
+                }
+            });
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) handleFileSelection(type, fileInput.files[0]);
+            });
+        }
+
+        setupUploader('doc');
+        setupUploader('vid');
+
+        function formatSize(size) {
+            if (size < 1024) return size + ' B';
+            else if (size < 1048576) return (size / 1024).toFixed(1) + ' KB';
+            else if (size < 1073741824) return (size / 1048576).toFixed(2) + ' MB';
+            else return (size / 1073741824).toFixed(2) + ' GB';
+        }
+
+        function handleFileSelection(type, file) {
+            const U = type.charAt(0).toUpperCase() + type.slice(1);
+            
+            // Client-side Size Validation
+            if (file.size > config[type].maxSize) {
+                showStatus(type, `File is too large! Maximum size allowed is ${config[type].name}.`, 'error');
+                document.getElementById(`fileInput${U}`).value = ''; // clear
+                return;
+            }
+
+            document.getElementById(`statusMessage${U}`).className = 'status-message';
+            document.getElementById(`fileName${U}`).textContent = file.name;
+            document.getElementById(`fileSize${U}`).textContent = formatSize(file.size);
+            
+            document.getElementById(`dropZone${U}`).style.display = 'none';
+            document.getElementById(`fileContainer${U}`).style.display = 'flex';
+            document.getElementById(`uploadBtn${U}`).style.display = 'block';
+        }
+
+        function removeFile(type) {
+            const U = type.charAt(0).toUpperCase() + type.slice(1);
+            document.getElementById(`fileInput${U}`).value = '';
+            document.getElementById(`dropZone${U}`).style.display = 'flex';
+            document.getElementById(`fileContainer${U}`).style.display = 'none';
+            document.getElementById(`uploadBtn${U}`).style.display = 'none';
+            document.getElementById(`statusMessage${U}`).className = 'status-message';
+        }
+
+        async function uploadFile(type, endpoint) {
+            const U = type.charAt(0).toUpperCase() + type.slice(1);
+            const fileInput = document.getElementById(`fileInput${U}`);
+            if (fileInput.files.length === 0) return;
+
+            const file = fileInput.files[0];
+            const btn = document.getElementById(`uploadBtn${U}`);
+            btn.disabled = true;
+            btn.textContent = 'Uploading...';
+            btn.style.opacity = '0.7';
+
+            if (type === 'vid') {
+                await uploadInChunks(file, endpoint, U);
+            } else {
+                await uploadStandard(file, endpoint, U, type);
+            }
+        }
+
+        async function uploadStandard(file, endpoint, U, type) {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwtToken') },
+                    body: formData
+                });
+                
+                if (res.status === 401 || res.status === 403) {
+                    window.location.href = '/login-password-encrypt';
+                    return;
+                }
+                
+                const data = await res.json();
+                if (res.ok) {
+                    showStatus(type, data.message, 'success');
+                    removeFile(type);
+                    showStatus(type, data.message, 'success'); 
+                } else {
+                    throw new Error(data.message || 'Upload failed');
+                }
+            } catch(err) {
+                console.error(err);
+                showStatus(type, err.message, 'error');
+            } finally {
+                const btn = document.getElementById(`uploadBtn${U}`);
+                btn.disabled = false;
+                btn.textContent = 'Upload to Database';
+                btn.style.opacity = '1';
+            }
+        }
+
+        async function uploadInChunks(file, endpoint, U) {
+            const chunkSize = 5 * 1024 * 1024; // 5MB
+            const totalChunks = Math.ceil(file.size / chunkSize);
+            // generate a random UUID for the upload session (fallback if crypto not available)
+            const uploadId = (typeof crypto !== 'undefined' && crypto.randomUUID) 
+                ? crypto.randomUUID() 
+                : Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            
+            const progressContainer = document.getElementById(`progressContainer${U}`);
+            const progressBar = document.getElementById(`progressBar${U}`);
+            progressContainer.style.display = 'block';
+            
+            try {
+                for (let i = 0; i < totalChunks; i++) {
+                    const start = i * chunkSize;
+                    const end = Math.min(start + chunkSize, file.size);
+                    const chunk = file.slice(start, end);
+                    
+                    const formData = new FormData();
+                    formData.append('file', chunk);
+                    formData.append('fileName', file.name);
+                    formData.append('chunkIndex', i);
+                    formData.append('totalChunks', totalChunks);
+                    formData.append('uploadId', uploadId);
+                    
+                    showStatus('vid', `Uploading chunk ${i + 1} of ${totalChunks}...`, 'success');
+                    
+                    const res = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Authorization': 'Bearer ' + localStorage.getItem('jwtToken') },
+                        body: formData
+                    });
+                    
+                    if (res.status === 401 || res.status === 403) {
+                        window.location.href = '/login-password-encrypt';
+                        return;
+                    }
+                    
+                    const data = await res.json();
+                    if (!res.ok) {
+                        throw new Error(data.message || 'Upload failed at chunk ' + i);
+                    }
+                    
+                    // Update progress
+                    const percentage = Math.round(((i + 1) / totalChunks) * 100);
+                    progressBar.style.width = percentage + '%';
+                }
+                
+                showStatus('vid', 'Large file fully uploaded and assembled!', 'success');
+                setTimeout(() => removeFile('vid'), 2000);
+                setTimeout(() => showStatus('vid', 'Large file fully uploaded and assembled!', 'success'), 2010);
+                
+            } catch(err) {
+                console.error(err);
+                showStatus('vid', err.message, 'error');
+            } finally {
+                const btn = document.getElementById(`uploadBtn${U}`);
+                btn.disabled = false;
+                btn.textContent = 'Upload to Filesystem';
+                btn.style.opacity = '1';
+                setTimeout(() => { progressContainer.style.display = 'none'; progressBar.style.width = '0%'; }, 2000);
+            }
+        }
+
+        function showStatus(type, message, statusType) {
+            const U = type.charAt(0).toUpperCase() + type.slice(1);
+            const statusEl = document.getElementById(`statusMessage${U}`);
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${statusType}`;
+        }
+    </script>
+</body>
+</html>

@@ -16,4 +16,9 @@ public class ViewController {
     public String loginPasswordEncrypt() {
         return "login-password-encrypt";
     }
+
+    @GetMapping("/file-upload")
+    public String fileUpload() {
+        return "file-upload";
+    }
 }

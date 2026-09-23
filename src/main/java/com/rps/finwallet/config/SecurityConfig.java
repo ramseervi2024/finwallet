@@ -47,7 +47,7 @@ public class SecurityConfig {
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/ui", "/login-password-encrypt").permitAll() // Allow public access to UI and Auth APIs
+                .requestMatchers("/api/auth/**", "/ui", "/login-password-encrypt", "/file-upload").permitAll() // Allow public access to UI and Auth APIs
                 .anyRequest().authenticated() // Secure all other endpoints (Employee/Department)
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
