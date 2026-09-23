@@ -227,10 +227,22 @@
 
     <script>
         function logout() {
-            fetch('/api/auth/logout', { method: 'POST' })
-                .then(() => {
-                    window.location.href = '/login-password-encrypt';
-                });
+            localStorage.removeItem('jwtToken');
+            window.location.href = '/login-password-encrypt';
+        }
+
+        function fetchWithAuth(url, options = {}) {
+            const token = localStorage.getItem('jwtToken');
+            if (!options.headers) options.headers = {};
+            if (token) options.headers['Authorization'] = 'Bearer ' + token;
+            
+            return fetch(url, options).then(res => {
+                if (res.status === 401 || res.status === 403) {
+                    logout();
+                    throw new Error("Unauthorized");
+                }
+                return res;
+            });
         }
 
         function showDashboard() {
@@ -243,34 +255,35 @@
 
         // Initialize App State
         document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                window.location.href = '/login-password-encrypt';
+                return;
+            }
+
             // Test if we are authenticated by pinging an API
-            fetch('/department')
+            fetchWithAuth('/department')
                 .then(res => {
-                    if (res.status === 401 || res.status === 403) {
-                        // Not authenticated, redirect to login page
-                        window.location.href = '/login-password-encrypt';
-                    } else if (res.ok) {
-                        // Authenticated
+                    if (res.ok) {
                         showDashboard();
                     }
-                });
+                }).catch(err => console.error("Initial auth check failed", err));
         });
 
-        // ---- CRUD LOGIC ---- (Existing logic maintained)
+        // ---- CRUD LOGIC ---- 
         let departmentsList = [];
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
 
         // Departments
         function fetchDepartments() {
-            fetch('/department').then(res => {
-                if(res.status === 401) { logout(); throw new Error("Unauthorized"); }
-                return res.json();
-            }).then(data => {
-                departmentsList = data || [];
-                renderDepartments(departmentsList);
-                updateDepartmentDropdown(departmentsList);
-            }).catch(err => console.error(err));
+            fetchWithAuth('/department')
+                .then(res => res.json())
+                .then(data => {
+                    departmentsList = data || [];
+                    renderDepartments(departmentsList);
+                    updateDepartmentDropdown(departmentsList);
+                }).catch(err => console.error(err));
         }
 
         function renderDepartments(data) {
@@ -303,24 +316,23 @@
             e.preventDefault();
             const id = document.getElementById('dept-id').value;
             const payload = { name: document.getElementById('dept-name').value, location: document.getElementById('dept-location').value };
-            fetch(id ? `/department/${id}` : `/department`, {
+            fetchWithAuth(id ? `/department/${id}` : `/department`, {
                 method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
             }).then(() => { closeModal('department-modal'); fetchDepartments(); fetchEmployees(); });
         }
 
         function deleteDepartment(id) {
             if(!confirm("Are you sure?")) return;
-            fetch(`/department/${id}`, { method: 'DELETE' }).then(() => { fetchDepartments(); fetchEmployees(); });
+            fetchWithAuth(`/department/${id}`, { method: 'DELETE' }).then(() => { fetchDepartments(); fetchEmployees(); });
         }
 
         // Employees
         function fetchEmployees() {
-            fetch('/employee').then(res => {
-                if(res.status === 401) { logout(); throw new Error("Unauthorized"); }
-                return res.json();
-            }).then(apiResponse => {
-                renderEmployees(apiResponse?.data?.content || []);
-            }).catch(err => console.error(err));
+            fetchWithAuth('/employee')
+                .then(res => res.json())
+                .then(apiResponse => {
+                    renderEmployees(apiResponse?.data?.content || []);
+                }).catch(err => console.error(err));
         }
 
         function renderEmployees(data) {
@@ -351,14 +363,14 @@
             const id = document.getElementById('emp-id').value;
             const deptId = document.getElementById('emp-dept').value;
             const payload = { name: document.getElementById('emp-name').value, email: document.getElementById('emp-email').value, departmentId: deptId ? parseInt(deptId) : null };
-            fetch(id ? `/employee/${id}` : `/employee`, {
+            fetchWithAuth(id ? `/employee/${id}` : `/employee`, {
                 method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
             }).then(() => { closeModal('employee-modal'); fetchEmployees(); });
         }
 
         function deleteEmployee(id) {
             if(!confirm("Are you sure?")) return;
-            fetch(`/employee/${id}`, { method: 'DELETE' }).then(() => fetchEmployees());
+            fetchWithAuth(`/employee/${id}`, { method: 'DELETE' }).then(() => fetchEmployees());
         }
     </script>
 </body>
