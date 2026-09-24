@@ -5,17 +5,15 @@ import com.rps.finwallet.service.*;
 
 import com.rps.finwallet.dto.EmployeeRequest;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
 
-    private final EmployeeService employeeService;
-
-    public EmployeeController(EmployeeService employeeService){
-        this.employeeService=employeeService;
-    }
+    @Autowired
+    private EmployeeService employeeService;
 
     // 1. GET API - Fetch all employees
     @GetMapping
