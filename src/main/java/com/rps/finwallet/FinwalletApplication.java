@@ -13,8 +13,10 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
+@EnableCaching  // Step 1: Activate Spring's caching engine
 @OpenAPIDefinition(info = @Info(title = "Finwallet API", version = "1.0", description = "API Documentation for Finwallet Application"))
 @SecurityScheme(
     name = "Bearer Authentication",

@@ -90,6 +90,12 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
+		<!-- Spring Cache - required for @Cacheable, @CacheEvict, @CachePut to work -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+
 		<!-- DevTools for Live Reload (Auto Restart) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
