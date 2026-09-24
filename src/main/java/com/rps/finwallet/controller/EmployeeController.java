@@ -6,10 +6,12 @@ import com.rps.finwallet.service.*;
 import com.rps.finwallet.dto.EmployeeRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/employee")
+@SecurityRequirement(name = "Bearer Authentication")
 public class EmployeeController {
 
     @Autowired
