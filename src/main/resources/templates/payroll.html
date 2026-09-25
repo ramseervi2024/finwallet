@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinWallet — Employee Salary & Payroll Banking Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --success: #10B981;
+            --success-hover: #059669;
+            --danger: #EF4444;
+            --danger-hover: #DC2626;
+            --warning: #F59E0B;
+            --bg: #F8FAFC;
+            --surface: #FFFFFF;
+            --surface-subtle: #F1F5F9;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --border-subtle: #F1F5F9;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #F8FAFC 0%, #EEF2F6 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.35rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        /* Treasury Hero Card */
+        .treasury-card {
+            background: linear-gradient(135deg, #3730A3 0%, #4F46E5 55%, #6366F1 100%);
+            border: 1px solid #4338CA;
+            border-radius: 20px;
+            padding: 2.25rem;
+            box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.25);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            color: #FFFFFF;
+        }
+
+        .treasury-info h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.875rem;
+            color: #C7D2FE;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .treasury-info .balance {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+
+        .treasury-info .meta {
+            color: #E0E7FF;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .treasury-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-treasury-refresh {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #FFFFFF;
+            box-shadow: none;
+        }
+        .btn-treasury-refresh:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #FFFFFF;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.4rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            gap: 0.5rem;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+        }
+        .btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-success { background: var(--success); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25); }
+        .btn-success:hover { background: var(--success-hover); }
+        .btn-danger { background: var(--danger); box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25); }
+        .btn-danger:hover { background: var(--danger-hover); }
+        .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.775rem; border-radius: 8px; }
+        .btn-outline { background: #FFFFFF; border: 1px solid var(--border); color: var(--text-main); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .btn-outline:hover { background: var(--surface-subtle); color: var(--text-main); }
+
+        /* Grid sections */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 980px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        .section-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.75rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* Table */
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: #F8FAFC; color: #475569; font-size: 0.75rem; text-transform: uppercase; padding: 0.85rem 1rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+        th:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+        th:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+        td { padding: 0.95rem 1rem; border-bottom: 1px solid var(--border-subtle); font-size: 0.875rem; color: #334155; }
+        tbody tr:hover { background: #F8FAFC; cursor: pointer; }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.725rem;
+            font-weight: 600;
+        }
+        .badge-success { background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+        .badge-danger { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+        .badge-info { background: #EEF2FF; color: #3730A3; border: 1px solid #C7D2FE; }
+        .badge-warning { background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; }
+
+        /* Forms */
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: #475569; }
+        .form-control {
+            width: 100%;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 10px;
+            padding: 0.65rem 0.9rem;
+            color: var(--text-main);
+            font-size: 0.875rem;
+            font-family: inherit;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); }
+
+        /* Toast / Alert */
+        #toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .toast {
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            padding: 1rem 1.4rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            font-size: 0.875rem;
+            min-width: 300px;
+            max-width: 450px;
+            color: var(--text-main);
+            animation: slideIn 0.3s ease;
+        }
+        .toast-success { border-left: 5px solid var(--success); }
+        .toast-error { border-left: 5px solid var(--danger); }
+        .toast-info { border-left: 5px solid var(--primary); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal {
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 480px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            color: var(--text-main);
+        }
+        .modal h3 { margin-top: 0; margin-bottom: 1.25rem; font-size: 1.25rem; color: var(--text-main); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h1>💳 FinWallet — Salary & Payroll Engine</h1>
+        <div class="nav-links">
+            <a href="/ui">Classic Directory</a>
+            <a href="/file-upload">Document Vault</a>
+            <a href="/payroll" class="active">Payroll & Wallets</a>
+            <a href="/swagger-ui/index.html" target="_blank">OpenAPI Docs ↗</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- 1. Corporate Treasury Hero -->
+        <div class="treasury-card">
+            <div class="treasury-info">
+                <h3>Corporate Payroll Treasury</h3>
+                <div class="balance" id="treasury-balance">₹0.00</div>
+                <div class="meta">
+                    Account: <strong id="treasury-account">CORP-TREASURY-01</strong> &nbsp;|&nbsp;
+                    Company: <strong id="treasury-company">FinWallet Corp</strong> &nbsp;|&nbsp;
+                    Concurrency Lock: <strong>Pessimistic DB Write Lock Active</strong>
+                </div>
+            </div>
+            <div class="treasury-actions">
+                <button class="btn btn-treasury-refresh" onclick="loadTreasury()">↻ Refresh</button>
+                <button class="btn btn-success" onclick="openDepositModal()">+ Fund Treasury</button>
+            </div>
+        </div>
+
+        <!-- 2. Main Grid: Left = Employee Salary & Payroll, Right = Quick Banking & Transfer -->
+        <div class="main-grid">
+
+            <!-- Employees & Monthly Payroll Disbursal -->
+            <div class="section-card">
+                <div class="card-header">
+                    <div>
+                        <h2>🏢 Employee Salary Ledger & Payouts</h2>
+                        <span style="font-size: 0.775rem; color: var(--text-muted);">
+                            Atomic disbursement with monthly idempotency protection
+                        </span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+                        <input type="month" id="selected-month" class="form-control" style="width: auto; padding: 0.4rem 0.75rem;" value="2026-03">
+                        <button class="btn btn-sm btn-outline" onclick="openAddEmployeeModal()">+ Add Employee</button>
+                        <button class="btn btn-sm btn-outline" style="color: #4F46E5; border-color: #C7D2FE;" onclick="seedDemoStaff()">⚡ Seed Demo Staff</button>
+                        <button class="btn btn-sm" onclick="runBulkPayroll()">⚡ Run Bulk Payroll</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Emp ID</th>
+                                <th>Name & Role</th>
+                                <th>Base Salary</th>
+                                <th>Salary Wallet</th>
+                                <th>Balance</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employees-table-body">
+                            <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading employees & wallets...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Employee Quick Banking (P2P Transfer & Withdrawal) -->
+            <div class="section-card">
+                <div class="card-header">
+                    <h2>💸 Employee Wallet Actions</h2>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Operating Employee</label>
+                    <select id="active-employee-select" class="form-control" onchange="onEmployeeSelected()">
+                        <option value="">-- Choose Employee --</option>
+                    </select>
+                </div>
+
+                <div id="selected-wallet-info" style="display: none; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem; margin-bottom: 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Wallet Number</span>
+                        <strong id="display-wallet-num" style="color: #4F46E5; font-weight: 700;">WAL-EMP-0001</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Available Balance</span>
+                        <strong id="display-wallet-bal" style="color: #059669; font-size: 1.35rem; font-weight: 800;">₹0.00</strong>
+                    </div>
+                </div>
+
+                <!-- Action Tabs -->
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <button class="btn btn-sm" id="btn-tab-transfer" onclick="switchActionTab('transfer')">P2P Transfer</button>
+                    <button class="btn btn-sm btn-outline" id="btn-tab-withdraw" onclick="switchActionTab('withdraw')">Bank Withdrawal</button>
+                </div>
+
+                <!-- P2P Transfer Form -->
+                <div id="tab-transfer-form">
+                    <div id="zero-balance-warning" style="display: none; background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.8rem; margin-bottom: 1rem;">
+                        💡 <strong>Wallet has ₹0.00:</strong> Click the green <strong>"Disburse Salary"</strong> button on the left to credit this employee's salary first!
+                    </div>
+                    <div class="form-group">
+                        <label>Recipient Employee & Wallet</label>
+                        <select id="transfer-target" class="form-control">
+                            <option value="">-- Choose Recipient Wallet --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (₹)</label>
+                        <input type="number" id="transfer-amount" class="form-control" placeholder="1000.00" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Description / Note</label>
+                        <input type="text" id="transfer-note" class="form-control" placeholder="Project bonus / lunch split">
+                    </div>
+                    <button class="btn" style="width: 100%;" onclick="submitTransfer()">Send Money Now</button>
+                </div>
+
+                <!-- Bank Withdrawal Form -->
+                <div id="tab-withdraw-form" style="display: none;">
+                    <div class="form-group">
+                        <label>Destination Bank Account Number</label>
+                        <input type="text" id="withdraw-bank" class="form-control" placeholder="e.g. HDFC0099887766">
+                    </div>
+                    <div class="form-group">
+                        <label>Withdrawal Amount (₹)</label>
+                        <input type="number" id="withdraw-amount" class="form-control" placeholder="5000.00" min="1">
+                    </div>
+                    <button class="btn btn-danger" style="width: 100%;" onclick="submitWithdraw()">Withdraw to Bank</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 3. Transaction Ledger & Audit Passbook -->
+        <div class="section-card">
+            <div class="card-header">
+                <div>
+                    <h2>📜 Live Financial Transaction Ledger (Passbook)</h2>
+                    <span style="font-size: 0.775rem; color: var(--text-muted);">
+                        Real-time double-entry audit records with UUID tracking
+                    </span>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="loadPassbook()">↻ Refresh Ledger</button>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Txn Reference</th>
+                            <th>Time</th>
+                            <th>From Account</th>
+                            <th>To Account</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledger-table-body">
+                        <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Select an employee above to inspect their live passbook.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Deposit Modal -->
+    <div class="modal-overlay" id="deposit-modal">
+        <div class="modal">
+            <h3>🏦 Capitalize Corporate Treasury</h3>
+            <div class="form-group">
+                <label>Deposit Amount (₹)</label>
+                <input type="number" id="deposit-amount" class="form-control" placeholder="500000.00" min="1">
+            </div>
+            <div class="form-group">
+                <label>Funding Note / Source</label>
+                <input type="text" id="deposit-desc" class="form-control" placeholder="Series A Capital injection">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="closeDepositModal()">Cancel</button>
+                <button class="btn btn-success" onclick="submitDeposit()">Confirm Deposit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Employee Modal -->
+    <div class="modal-overlay" id="add-employee-modal">
+        <div class="modal">
+            <h3>👤 Add New Employee</h3>
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="new-emp-name" class="form-control" placeholder="e.g. Ramesh Seervi" required>
+            </div>
+            <div class="form-group">
+                <label>Work Email *</label>
+                <input type="email" id="new-emp-email" class="form-control" placeholder="e.g. ramesh@finwallet.com" required>
+            </div>
+            <div class="form-group">
+                <label>Base Monthly Salary (₹) *</label>
+                <input type="number" id="new-emp-salary" class="form-control" placeholder="75000.00" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>Role / Designation</label>
+                <input type="text" id="new-emp-role" class="form-control" placeholder="e.g. Senior Software Engineer">
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+                <button class="btn btn-outline" onclick="closeAddEmployeeModal()">Cancel</button>
+                <button class="btn" onclick="submitAddEmployee()">Create & Open Wallet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        let employeesData = [];
+        let currentTreasury = null;
+
+        // Auto initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadTreasury();
+            loadEmployees();
+        });
+
+        // Toast Helper
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // 1. Treasury
+        async function loadTreasury() {
+            try {
+                const res = await fetch('/api/treasury');
+                const data = await res.json();
+                if (data.data) {
+                    currentTreasury = data.data;
+                    document.getElementById('treasury-balance').innerText = '₹' + Number(currentTreasury.balance).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+                    document.getElementById('treasury-account').innerText = currentTreasury.accountNumber;
+                    document.getElementById('treasury-company').innerText = currentTreasury.companyName;
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Failed to load corporate treasury', 'error');
+            }
+        }
+
+        function openDepositModal() {
+            document.getElementById('deposit-modal').style.display = 'flex';
+        }
+
+        function closeDepositModal() {
+            document.getElementById('deposit-modal').style.display = 'none';
+        }
+
+        async function submitDeposit() {
+            const amount = document.getElementById('deposit-amount').value;
+            const desc = document.getElementById('deposit-desc').value;
+            if (!amount || amount <= 0) {
+                showToast('Please enter a valid deposit amount', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/treasury/deposit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: parseFloat(amount), description: desc })
+                });
+                const result = await res.json();
+                if (res.ok) {
+                    showToast('Corporate Treasury funded with ₹' + Number(amount).toLocaleString('en-IN', { minimumFractionDigits: 2 }), 'success');
+                    closeDepositModal();
+                    loadTreasury();
+                } else {
+                    showToast(result.message || 'Deposit failed', 'error');
+                }
+            } catch (err) {
+                showToast('Network error during deposit', 'error');
+            }
+        }
+
+        // 2. Load Employees & Wallets
+        async function loadEmployees() {
+            const tbody = document.getElementById('employees-table-body');
+            const select = document.getElementById('active-employee-select');
+            try {
+                // Try /api/employees first, fallback to /employee
+                let res = await fetch('/api/employees?page=0&size=50');
+                if (!res.ok) {
+                    res = await fetch('/employee?page=0&size=50');
+                }
+                const result = await res.json();
+                employeesData = result.data ? (result.data.content || result.data) : [];
+
+                if (!Array.isArray(employeesData) || employeesData.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 3rem 1rem;">
+                                <div style="font-size: 1.15rem; font-weight: 700; color: #1E293B; margin-bottom: 0.5rem;">No Employees Registered Yet</div>
+                                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Click the button below to automatically generate 4 realistic demo employees with salary details and active wallets.</p>
+                                <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                                    <button class="btn btn-sm" onclick="seedDemoStaff()">⚡ Seed 4 Demo Employees Now</button>
+                                    <button class="btn btn-sm btn-outline" onclick="openAddEmployeeModal()">+ Add Custom Employee</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    select.innerHTML = '<option value="">-- No Employees Available --</option>';
+                    return;
+                }
+
+                select.innerHTML = '<option value="">-- Choose Employee --</option>';
+                tbody.innerHTML = '';
+
+                for (const emp of employeesData) {
+                    const opt = document.createElement('option');
+                    opt.value = emp.id;
+                    opt.innerText = `#${emp.id} - ${emp.name} (₹${emp.baseSalary || 0})`;
+                    select.appendChild(opt);
+
+                    let walletBal = '₹0.00';
+                    let walletNum = 'WAL-EMP-' + String(emp.id).padStart(4, '0');
+                    try {
+                        const wRes = await fetch(`/api/wallets/employee/${emp.id}`);
+                        const wData = await wRes.json();
+                        if (wData.data) {
+                            walletBal = '₹' + Number(wData.data.balance).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+                            walletNum = wData.data.walletNumber;
+                        }
+                    } catch (e) {}
+
+                    const salaryFormatted = '₹' + Number(emp.baseSalary || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+                    const isZeroSalary = !emp.baseSalary || Number(emp.baseSalary) <= 0;
+                    const salaryDisplay = isZeroSalary 
+                        ? `<button class="btn btn-sm btn-outline" style="color: #4F46E5; border-color: #C7D2FE; padding: 2px 8px; font-size: 0.75rem;" onclick="quickSetSalary(${emp.id})">+ Set ₹75k</button>`
+                        : `<span style="font-weight: 700; color: #1E293B;">${salaryFormatted}</span>`;
+
+                    const tr = document.createElement('tr');
+                    tr.title = 'Click row to select for wallet operations';
+                    tr.onclick = (e) => {
+                        // don't trigger if clicked on the disburse button
+                        if (e.target.tagName !== 'BUTTON') {
+                            selectEmployeeById(emp.id);
+                        }
+                    };
+                    tr.innerHTML = `
+                        <td><strong>#${emp.id}</strong></td>
+                        <td>
+                            <div style="font-weight: 600; color: #0F172A;">${emp.name}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">${emp.designation || 'Staff'} • ${emp.email}</div>
+                        </td>
+                        <td>${salaryDisplay}</td>
+                        <td><span class="badge badge-info">${walletNum}</span></td>
+                        <td><strong style="color: #059669; font-weight: 700;">${walletBal}</strong></td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-sm btn-success" onclick="disburseSingle(${emp.id})">
+                                Disburse Salary
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+
+                // If none selected, auto-select first employee
+                if (employeesData.length > 0 && !select.value) {
+                    select.value = employeesData[0].id;
+                    onEmployeeSelected();
+                }
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--danger); padding: 2rem;">Error loading employees. Ensure backend is running.</td></tr>';
+            }
+        }
+
+        function selectEmployeeById(empId) {
+            const select = document.getElementById('active-employee-select');
+            select.value = empId;
+            onEmployeeSelected();
+            showToast(`Selected employee #${empId}`, 'info');
+        }
+
+        // 3. Add Employee Modal Logic
+        function openAddEmployeeModal() {
+            document.getElementById('add-employee-modal').style.display = 'flex';
+        }
+
+        function closeAddEmployeeModal() {
+            document.getElementById('add-employee-modal').style.display = 'none';
+        }
+
+        async function submitAddEmployee() {
+            const name = document.getElementById('new-emp-name').value;
+            const email = document.getElementById('new-emp-email').value;
+            const salary = document.getElementById('new-emp-salary').value;
+            const role = document.getElementById('new-emp-role').value;
+
+            if (!name || !email || !salary || salary <= 0) {
+                showToast('Please provide valid name, email, and salary', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/employees', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        baseSalary: parseFloat(salary),
+                        designation: role || 'Staff Member',
+                        status: 'ACTIVE'
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Employee ${name} registered with Salary Wallet!`, 'success');
+                    closeAddEmployeeModal();
+                    document.getElementById('new-emp-name').value = '';
+                    document.getElementById('new-emp-email').value = '';
+                    document.getElementById('new-emp-salary').value = '';
+                    document.getElementById('new-emp-role').value = '';
+                    loadEmployees();
+                } else {
+                    showToast(data.message || 'Failed to create employee', 'error');
+                }
+            } catch (err) {
+                showToast('Network error creating employee', 'error');
+            }
+        }
+
+        // 4. Seed Demo Staff
+        async function seedDemoStaff() {
+            try {
+                showToast('Seeding 4 demo employees with salary wallets...', 'info');
+                const res = await fetch('/api/payroll/seed-demo-staff', { method: 'POST' });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast('Demo staff and wallets populated successfully!', 'success');
+                    loadTreasury();
+                    loadEmployees();
+                } else {
+                    showToast(data.message || 'Seeding failed', 'error');
+                }
+            } catch (err) {
+                showToast('Network error during demo staff seeding', 'error');
+            }
+        }
+
+        // 5. Disburse Single Salary
+        async function disburseSingle(employeeId) {
+            const month = document.getElementById('selected-month').value;
+            if (!month) {
+                showToast('Please select a valid month', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/payroll/disburse', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        employeeId: employeeId,
+                        salaryMonth: month,
+                        notes: `Monthly Salary Payout for ${month}`
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Salary of ₹${Number(data.data.amount).toLocaleString('en-IN')} disbursed successfully for ${month}! Ref: ${data.data.referenceNumber}`, 'success');
+                    loadTreasury();
+                    loadEmployees();
+                    if (document.getElementById('active-employee-select').value == employeeId) {
+                        onEmployeeSelected();
+                    }
+                } else {
+                    showToast(data.message || 'Disbursement failed', 'error');
+                }
+            } catch (err) {
+                showToast('Network error during salary disbursement', 'error');
+            }
+        }
+
+        // 6. Bulk Payroll
+        async function runBulkPayroll() {
+            const month = document.getElementById('selected-month').value;
+            if (!confirm(`Are you sure you want to run bulk payroll for all active employees for ${month}?`)) {
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/payroll/bulk-disburse', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ salaryMonth: month, notes: 'Automated batch payroll' })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    const batch = data.data;
+                    showToast(`Bulk Payroll Finished! Success: ${batch.successfulDisbursements}, Failed: ${batch.failedDisbursements}, Total: ₹${Number(batch.totalAmountDisbursed).toLocaleString('en-IN')}`, 'success');
+                    loadTreasury();
+                    loadEmployees();
+                } else {
+                    showToast(data.message || 'Bulk payroll failed', 'error');
+                }
+            } catch (err) {
+                showToast('Network error running bulk payroll', 'error');
+            }
+        }
+
+        // 7. Select Employee for Wallet Ops & Passbook
+        async function onEmployeeSelected() {
+            const empId = document.getElementById('active-employee-select').value;
+            const walletBox = document.getElementById('selected-wallet-info');
+            const zeroWarning = document.getElementById('zero-balance-warning');
+            const targetSelect = document.getElementById('transfer-target');
+
+            if (!empId) {
+                walletBox.style.display = 'none';
+                if (zeroWarning) zeroWarning.style.display = 'none';
+                return;
+            }
+
+            // Populate recipient options with other employees
+            if (targetSelect && employeesData && employeesData.length > 0) {
+                targetSelect.innerHTML = '<option value="">-- Choose Recipient Wallet --</option>';
+                for (const e of employeesData) {
+                    if (e.id != empId) {
+                        const opt = document.createElement('option');
+                        const wNum = 'WAL-EMP-' + String(e.id).padStart(4, '0');
+                        opt.value = wNum;
+                        opt.innerText = `${wNum} — ${e.name}`;
+                        targetSelect.appendChild(opt);
+                    }
+                }
+            }
+
+            try {
+                const res = await fetch(`/api/wallets/employee/${empId}`);
+                const data = await res.json();
+                if (data.data) {
+                    const w = data.data;
+                    document.getElementById('display-wallet-num').innerText = w.walletNumber;
+                    document.getElementById('display-wallet-bal').innerText = '₹' + Number(w.balance).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+                    walletBox.style.display = 'block';
+
+                    // If balance is 0, show friendly guidance
+                    if (zeroWarning) {
+                        zeroWarning.style.display = Number(w.balance) <= 0 ? 'block' : 'none';
+                    }
+
+                    loadPassbook();
+                }
+            } catch (err) {
+                showToast('Could not fetch wallet details', 'error');
+            }
+        }
+
+        async function quickSetSalary(empId) {
+            const emp = employeesData.find(e => e.id == empId);
+            const name = emp ? emp.name : ('Employee #' + empId);
+            const email = emp ? emp.email : ('emp' + empId + '@finwallet.com');
+            const deptId = (emp && emp.department) ? emp.department.id : null;
+            try {
+                const res = await fetch(`/api/employees/${empId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        departmentId: deptId,
+                        baseSalary: 75000.00,
+                        designation: (emp && emp.designation) ? emp.designation : 'Senior Software Engineer',
+                        status: 'ACTIVE'
+                    })
+                });
+                showToast(`Base Salary set to ₹75,000 for ${name}`, 'success');
+                loadEmployees();
+            } catch (err) {
+                showToast('Failed to update salary', 'error');
+            }
+        }
+
+        function switchActionTab(tab) {
+            const btnTransfer = document.getElementById('btn-tab-transfer');
+            const btnWithdraw = document.getElementById('btn-tab-withdraw');
+            const formTransfer = document.getElementById('tab-transfer-form');
+            const formWithdraw = document.getElementById('tab-withdraw-form');
+
+            if (tab === 'transfer') {
+                btnTransfer.className = 'btn btn-sm';
+                btnWithdraw.className = 'btn btn-sm btn-outline';
+                formTransfer.style.display = 'block';
+                formWithdraw.style.display = 'none';
+            } else {
+                btnTransfer.className = 'btn btn-sm btn-outline';
+                btnWithdraw.className = 'btn btn-sm btn-danger';
+                formTransfer.style.display = 'none';
+                formWithdraw.style.display = 'block';
+            }
+        }
+
+        // 8. Submit P2P Transfer
+        async function submitTransfer() {
+            const empId = document.getElementById('active-employee-select').value;
+            if (!empId) {
+                showToast('Please select the sender employee first', 'error');
+                return;
+            }
+
+            const targetWallet = document.getElementById('transfer-target').value;
+            const amount = document.getElementById('transfer-amount').value;
+            const note = document.getElementById('transfer-note').value;
+
+            if (!targetWallet || !amount || amount <= 0) {
+                showToast('Please enter a valid recipient wallet and amount', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/wallets/${empId}/transfer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        targetWalletNumber: targetWallet,
+                        amount: parseFloat(amount),
+                        description: note
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Transferred ₹${Number(amount).toLocaleString('en-IN')} successfully! Ref: ${data.data.transactionRef}`, 'success');
+                    onEmployeeSelected();
+                    loadEmployees();
+                } else {
+                    showToast(data.message || 'Transfer failed', 'error');
+                }
+            } catch (err) {
+                showToast('Network error during transfer', 'error');
+            }
+        }
+
+        // 9. Submit Withdrawal
+        async function submitWithdraw() {
+            const empId = document.getElementById('active-employee-select').value;
+            if (!empId) {
+                showToast('Please select an employee first', 'error');
+                return;
+            }
+
+            const bank = document.getElementById('withdraw-bank').value;
+            const amount = document.getElementById('withdraw-amount').value;
+
+            if (!bank || !amount || amount <= 0) {
+                showToast('Please enter destination bank account and amount', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/wallets/${empId}/withdraw`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        bankAccountNumber: bank,
+                        amount: parseFloat(amount),
+                        notes: 'Self bank withdrawal'
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast(`Withdrew ₹${Number(amount).toLocaleString('en-IN')} to bank! Ref: ${data.data.transactionRef}`, 'success');
+                    onEmployeeSelected();
+                    loadEmployees();
+                } else {
+                    showToast(data.message || 'Withdrawal failed', 'error');
+                }
+            } catch (err) {
+                showToast('Network error during withdrawal', 'error');
+            }
+        }
+
+        // 10. Load Passbook
+        async function loadPassbook() {
+            const empId = document.getElementById('active-employee-select').value;
+            const tbody = document.getElementById('ledger-table-body');
+            if (!empId) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">Select an employee above to inspect their live passbook.</td></tr>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/wallets/${empId}/passbook?page=0&size=20`);
+                const data = await res.json();
+                const content = data.data ? data.data.content : [];
+
+                if (content.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No transaction history found for this wallet.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                for (const txn of content) {
+                    const time = new Date(txn.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+                    const badgeClass = txn.transactionType.includes('CREDIT') || txn.transactionType === 'DEPOSIT' ? 'badge-success' : 'badge-warning';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><code style="color: #4F46E5; background: #EEF2FF; padding: 2px 6px; border-radius: 4px; font-weight: 600;">${txn.transactionRef}</code></td>
+                        <td style="color: var(--text-muted); font-size: 0.8rem;">${time}</td>
+                        <td style="font-weight: 500;">${txn.fromAccount}</td>
+                        <td style="font-weight: 500;">${txn.toAccount}</td>
+                        <td><span class="badge ${badgeClass}">${txn.transactionType}</span></td>
+                        <td><strong style="color: #0F172A;">₹${Number(txn.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</strong></td>
+                        <td><span class="badge badge-success">${txn.status}</span></td>
+                        <td style="color: var(--text-muted);">${txn.description || '-'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--danger); padding: 1.5rem;">Error loading passbook records.</td></tr>';
+            }
+        }
+    </script>
+</body>
+</html>

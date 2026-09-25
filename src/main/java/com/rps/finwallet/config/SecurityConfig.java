@@ -47,8 +47,23 @@ public class SecurityConfig {
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/ui", "/login-password-encrypt", "/file-upload", "/swagger-ui/**", "/v3/api-docs/**").permitAll() // Allow public access to UI and Auth APIs
-                .anyRequest().authenticated() // Secure all other endpoints (Employee/Department)
+                .requestMatchers(
+                    "/api/auth/**",
+                    "/ui",
+                    "/payroll",
+                    "/login-password-encrypt",
+                    "/file-upload",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/api/payroll/**",
+                    "/api/wallets/**",
+                    "/api/treasury/**",
+                    "/api/employees/**",
+                    "/employee/**",
+                    "/api/departments/**",
+                    "/department/**"
+                ).permitAll() // Allow public access to UI and all FinWallet test APIs
+                .anyRequest().authenticated() // Secure all other endpoints
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

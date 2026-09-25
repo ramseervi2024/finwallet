@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping({"/employee", "/api/employees"})
 @SecurityRequirement(name = "Bearer Authentication")
 public class EmployeeController {
 

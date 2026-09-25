@@ -1,20 +1,39 @@
 package com.rps.finwallet.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.rps.finwallet.model.*;
-import com.rps.finwallet.repository.*;
-import com.rps.finwallet.service.*;
-import com.rps.finwallet.controller.*;
-import com.rps.finwallet.dto.*;
-import com.rps.finwallet.exception.*;
-
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
-@Table(name="departments")
+@Table(name = "departments")
 public class Department {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String location;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    private List<Employee> employees;
+
+    public Department() {
+    }
+
+    public Department(String name, String location) {
+        this.name = name;
+        this.location = location;
+    }
+
+    public Department(Long id, String name, String location, List<Employee> employees) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.employees = employees;
+    }
+
     public Long getId() {
         return id;
     }
@@ -46,18 +65,4 @@ public class Department {
     public void setEmployees(List<Employee> employees) {
         this.employees = employees;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String location;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "department", cascade=CascadeType.ALL)
-    private List<Employee> employees;
-
-
-
-
 }

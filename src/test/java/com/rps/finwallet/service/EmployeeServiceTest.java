@@ -45,6 +45,9 @@ class EmployeeServiceTest {
     @Mock
     private DepartmentRepository departmentRepository;
 
+    @Mock
+    private WalletService walletService;
+
     // @InjectMocks creates a REAL EmployeeService and injects the above mocks into it
     @InjectMocks
     private EmployeeService employeeService;

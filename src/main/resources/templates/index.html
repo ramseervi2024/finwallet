@@ -127,7 +127,10 @@
 <body>
 
     <nav class="navbar">
-        <h1>FinWallet API Dashboard</h1>
+        <div style="display: flex; align-items: center; gap: 2rem;">
+            <h1>FinWallet API Dashboard</h1>
+            <a href="/payroll" style="color: #4F46E5; font-weight: 600; text-decoration: none; font-size: 0.9rem; background: #EEF2FF; padding: 0.35rem 0.85rem; border-radius: 9999px;">💳 Go to Salary & Payroll Engine →</a>
+        </div>
         <div class="text-sm" style="color: var(--text-muted); font-size: 0.875rem; display: flex; gap: 1rem; align-items: center;">
             <span id="user-info">Not logged in</span>
             <button class="btn btn-sm btn-outline" id="logout-btn" style="display: none;" onclick="logout()">Logout</button>

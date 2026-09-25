@@ -46,5 +46,33 @@ public class EmployeeRequest {
 
     private Long departmentId;
 
+    private java.math.BigDecimal baseSalary;
+    private String designation;
+    private EmployeeStatus status;
+
+    public java.math.BigDecimal getBaseSalary() {
+        return baseSalary;
+    }
+
+    public void setBaseSalary(java.math.BigDecimal baseSalary) {
+        this.baseSalary = baseSalary;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public EmployeeStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EmployeeStatus status) {
+        this.status = status;
+    }
+
 
 }

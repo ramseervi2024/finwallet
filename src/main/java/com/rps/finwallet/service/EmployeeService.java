@@ -23,10 +23,14 @@ import java.util.List;
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
+    private final WalletService walletService;
 
-    public EmployeeService(EmployeeRepository employeeRepository, DepartmentRepository departmentRepository){
-        this.employeeRepository=employeeRepository;
-        this.departmentRepository=departmentRepository;
+    public EmployeeService(EmployeeRepository employeeRepository,
+                           DepartmentRepository departmentRepository,
+                           WalletService walletService){
+        this.employeeRepository = employeeRepository;
+        this.departmentRepository = departmentRepository;
+        this.walletService = walletService;
     }
 
     /**
@@ -63,17 +67,30 @@ public class EmployeeService {
      */
     @CacheEvict(value = "employees", allEntries = true)
     public Employee createEmployee(EmployeeRequest request){
-        Employee employee=new Employee();
+        Employee employee = new Employee();
         employee.setName(request.getName());
         employee.setEmail(request.getEmail());
+        if (request.getBaseSalary() != null) {
+            employee.setBaseSalary(request.getBaseSalary());
+        }
+        if (request.getDesignation() != null) {
+            employee.setDesignation(request.getDesignation());
+        }
+        if (request.getStatus() != null) {
+            employee.setStatus(request.getStatus());
+        }
 
-        if(request.getDepartmentId() !=null){
-            Department dept=departmentRepository.findById(request.getDepartmentId()).orElseThrow(()->
+        if(request.getDepartmentId() != null){
+            Department dept = departmentRepository.findById(request.getDepartmentId()).orElseThrow(()->
                     new RuntimeException("Department not found!"));
             employee.setDepartment(dept);
         }
 
-        return employeeRepository.save(employee);
+        Employee saved = employeeRepository.save(employee);
+        // Automatically create and link a salary wallet for this employee
+        walletService.getOrCreateWalletForEmployee(saved);
+
+        return saved;
     }
 
     /**
@@ -91,8 +108,18 @@ public class EmployeeService {
 
         employee.setName(updatedEmployee.getName());
         employee.setEmail(updatedEmployee.getEmail());
-        if(updatedEmployee.getDepartmentId() !=null){
-            Department dept=departmentRepository.findById(updatedEmployee.getDepartmentId()).orElseThrow(()->
+        if (updatedEmployee.getBaseSalary() != null) {
+            employee.setBaseSalary(updatedEmployee.getBaseSalary());
+        }
+        if (updatedEmployee.getDesignation() != null) {
+            employee.setDesignation(updatedEmployee.getDesignation());
+        }
+        if (updatedEmployee.getStatus() != null) {
+            employee.setStatus(updatedEmployee.getStatus());
+        }
+
+        if(updatedEmployee.getDepartmentId() != null){
+            Department dept = departmentRepository.findById(updatedEmployee.getDepartmentId()).orElseThrow(()->
                     new RuntimeException("Department not found!"));
             employee.setDepartment(dept);
         }

@@ -31,6 +31,20 @@ public class GlobalExceptionHandler {
                 404);
     }
 
+    // Insufficient Balance
+    @ExceptionHandler(InsufficientBalanceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiResponse<Void> handleInsufficientBalance(InsufficientBalanceException ex) {
+        return new ApiResponse<>(ex.getMessage(), 400);
+    }
+
+    // Duplicate Payout / Idempotency Conflict
+    @ExceptionHandler(DuplicateDisbursementException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiResponse<Void> handleDuplicateDisbursement(DuplicateDisbursementException ex) {
+        return new ApiResponse<>(ex.getMessage(), 409);
+    }
+
     // Wrong path parameter type
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

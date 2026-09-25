@@ -21,4 +21,9 @@ public class ViewController {
     public String fileUpload() {
         return "file-upload";
     }
+
+    @GetMapping("/payroll")
+    public String payroll() {
+        return "payroll";
+    }
 }

@@ -27,6 +27,15 @@ public class Employee {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @Column(name = "base_salary", precision = 15, scale = 2)
+    private java.math.BigDecimal baseSalary = java.math.BigDecimal.ZERO;
+
+    private String designation;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private EmployeeStatus status = EmployeeStatus.ACTIVE;
+
     public Employee() {
     }
 
@@ -35,6 +44,18 @@ public class Employee {
         this.name = name;
         this.email = email;
         this.department = department;
+        this.status = EmployeeStatus.ACTIVE;
+        this.baseSalary = java.math.BigDecimal.ZERO;
+    }
+
+    public Employee(Long id, String name, String email, Department department, java.math.BigDecimal baseSalary, String designation, EmployeeStatus status) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.department = department;
+        this.baseSalary = baseSalary != null ? baseSalary : java.math.BigDecimal.ZERO;
+        this.designation = designation;
+        this.status = status != null ? status : EmployeeStatus.ACTIVE;
     }
 
     public Long getId() {
@@ -69,4 +90,27 @@ public class Employee {
         this.department = department;
     }
 
+    public java.math.BigDecimal getBaseSalary() {
+        return baseSalary;
+    }
+
+    public void setBaseSalary(java.math.BigDecimal baseSalary) {
+        this.baseSalary = baseSalary;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public EmployeeStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EmployeeStatus status) {
+        this.status = status;
+    }
 }
