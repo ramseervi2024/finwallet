@@ -1,5 +1,7 @@
 package com.rps.finwallet.service;
 
+import com.rps.finwallet.aspect.LogExecutionTime;
+import com.rps.finwallet.aspect.TrackHighValueTransaction;
 import com.rps.finwallet.dto.TreasuryDepositRequest;
 import com.rps.finwallet.model.*;
 import com.rps.finwallet.repository.CompanyTreasuryRepository;
@@ -41,7 +43,13 @@ public class CompanyTreasuryService {
     /**
      * Capitalizes/deposits funds into the corporate treasury.
      * Uses Pessimistic Locking to ensure serial consistency on the treasury row.
+     *
+     * AOP Interceptions:
+     * - @LogExecutionTime: Measures capitalization latency
+     * - @TrackHighValueTransaction: Audits and flags deposits >= ₹100,000
      */
+    @LogExecutionTime("Treasury Capitalization")
+    @TrackHighValueTransaction(threshold = 100000.0, action = "TREASURY_CAPITALIZATION")
     @Transactional
     public CompanyTreasury depositToTreasury(TreasuryDepositRequest request) {
         CompanyTreasury treasury;

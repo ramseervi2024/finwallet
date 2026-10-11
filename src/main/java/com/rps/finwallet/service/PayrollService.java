@@ -1,5 +1,7 @@
 package com.rps.finwallet.service;
 
+import com.rps.finwallet.aspect.LogExecutionTime;
+import com.rps.finwallet.aspect.TrackHighValueTransaction;
 import com.rps.finwallet.dto.BulkPayrollRequest;
 import com.rps.finwallet.dto.PayrollBatchResponse;
 import com.rps.finwallet.dto.SalaryDisburseRequest;
@@ -55,7 +57,13 @@ public class PayrollService {
      * 2. Active status & valid salary checks
      * 3. Pessimistic DB locking on Treasury and Employee Wallet
      * 4. ACID Transactionality: rollback on any error
+     *
+     * AOP Interceptions:
+     * - @LogExecutionTime: Profiles performance via PerformanceAspect
+     * - @TrackHighValueTransaction: Audits and flags transactions >= ₹50,000
      */
+    @LogExecutionTime("Individual Salary Payout")
+    @TrackHighValueTransaction(threshold = 50000.0, action = "MONTHLY_SALARY_PAYOUT")
     @Transactional(rollbackFor = Exception.class)
     public SalaryDisbursement disburseSalary(SalaryDisburseRequest request) {
         Long employeeId = request.getEmployeeId();
@@ -149,6 +157,7 @@ public class PayrollService {
      * Processes each employee in their own isolated transaction so that one failure
      * (e.g. already paid or inactive) does not block the rest of the batch.
      */
+    @LogExecutionTime("Bulk Payroll Batch Execution")
     public PayrollBatchResponse processBulkPayroll(BulkPayrollRequest request) {
         String salaryMonth = request.getSalaryMonth();
         List<Employee> targets;

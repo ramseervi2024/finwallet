@@ -1,5 +1,7 @@
 package com.rps.finwallet.service;
 
+import com.rps.finwallet.aspect.LogExecutionTime;
+import com.rps.finwallet.aspect.TrackHighValueTransaction;
 import com.rps.finwallet.dto.TransferRequest;
 import com.rps.finwallet.dto.WithdrawRequest;
 import com.rps.finwallet.exception.InsufficientBalanceException;
@@ -53,7 +55,13 @@ public class WalletService {
     /**
      * Peer-to-Peer Wallet Transfer (Employee to Employee).
      * Employs Pessimistic Locking on both wallets to prevent race conditions & double-spending.
+     *
+     * AOP Interceptions:
+     * - @LogExecutionTime: Measures transfer execution latency
+     * - @TrackHighValueTransaction: Audits and flags transfers >= ₹50,000
      */
+    @LogExecutionTime("P2P Wallet Transfer")
+    @TrackHighValueTransaction(threshold = 50000.0, action = "P2P_WALLET_TRANSFER")
     @Transactional(rollbackFor = Exception.class)
     public TransactionLedger transferFunds(Long senderEmployeeId, TransferRequest request) {
         if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
@@ -116,7 +124,13 @@ public class WalletService {
     /**
      * Self Withdrawal to Bank Account.
      * Uses Pessimistic Lock to guarantee atomic balance deduction.
+     *
+     * AOP Interceptions:
+     * - @LogExecutionTime: Measures withdrawal latency
+     * - @TrackHighValueTransaction: Audits and flags withdrawals >= ₹50,000
      */
+    @LogExecutionTime("Bank Withdrawal")
+    @TrackHighValueTransaction(threshold = 50000.0, action = "BANK_WITHDRAWAL")
     @Transactional(rollbackFor = Exception.class)
     public TransactionLedger withdrawFunds(Long employeeId, WithdrawRequest request) {
         if (request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
