@@ -1,9 +1,13 @@
 package com.rps.finwallet.xlearning;
 
 import com.rps.finwallet.model.Employee;
+import com.rps.finwallet.model.EmployeeStatus;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +16,7 @@ import java.util.List;
 
 /**
  * Service demonstrating how to communicate with JPA & Hibernate
- * for Complex Joins using both:
- * 1. Spring Data JPA Repository (@Query)
- * 2. Direct EntityManager (TypedQuery & Native Queries)
+ * for Complex Joins, Projections, Window Functions, and EntityManager.
  */
 @Service
 @Transactional(readOnly = true)
@@ -42,6 +44,9 @@ public class JpaComplexQueryService {
         demonstrateGroupByHaving();
         demonstrateSubquery();
         demonstrateDtoProjection();
+        demonstrateConditionalCaseWhen();
+        demonstratePagination();
+        demonstrateNativeSqlWithWindowFunctions();
         demonstrateDirectEntityManagerUsage();
 
         System.out.println("\n=======================================================");
@@ -120,10 +125,54 @@ public class JpaComplexQueryService {
     }
 
     // =========================================================================
-    // 7. Demo: Direct EntityManager Communication (No Repository required)
+    // 7. Demo: Conditional Logic (CASE WHEN THEN ELSE END)
+    // =========================================================================
+    public void demonstrateConditionalCaseWhen() {
+        System.out.println("\n--- [Query 6] Conditional Logic (CASE WHEN ... THEN ... END) ---");
+        List<Object[]> tiers = queryRepository.getEmployeeSalaryTierCategorization();
+
+        for (Object[] row : tiers) {
+            String name = (String) row[0];
+            BigDecimal salary = (BigDecimal) row[1];
+            String tier = (String) row[2];
+            String dept = (String) row[3];
+            System.out.printf("   Emp: %-12s | Salary: ₹%-8s | Tier: %-10s | Dept: %s%n", name, salary, tier, dept);
+        }
+    }
+
+    // =========================================================================
+    // 8. Demo: Pagination with Pageable
+    // =========================================================================
+    public void demonstratePagination() {
+        System.out.println("\n--- [Query 7] Pagination (Pageable: Page 0, Size 3, Sorted by Salary) ---");
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "baseSalary"));
+        Page<Employee> page = queryRepository.findEmployeesWithPagination(EmployeeStatus.ACTIVE, pageRequest);
+
+        System.out.printf("   Total Elements: %d | Total Pages: %d | Current Page Size: %d%n",
+                page.getTotalElements(), page.getTotalPages(), page.getNumberOfElements());
+    }
+
+    // =========================================================================
+    // 9. Demo: Native SQL with Window Functions (DENSE_RANK)
+    // =========================================================================
+    public void demonstrateNativeSqlWithWindowFunctions() {
+        System.out.println("\n--- [Query 8] Advanced Native SQL (DENSE_RANK() Window Function) ---");
+        try {
+            List<Object[]> ranked = queryRepository.findDepartmentWiseSalaryRanksNativeSql();
+            for (Object[] row : ranked) {
+                System.out.printf("   Emp: %-12s | Dept: %-12s | Salary: ₹%-8s | Rank in Dept: #%s%n",
+                        row[0], row[1], row[2], row[3]);
+            }
+        } catch (Exception e) {
+            System.out.println("   Native Window function skipped (Requires MySQL 8.0+ running).");
+        }
+    }
+
+    // =========================================================================
+    // 10. Demo: Direct EntityManager Communication (No Repository required)
     // =========================================================================
     public void demonstrateDirectEntityManagerUsage() {
-        System.out.println("\n--- [Query 6] Direct EntityManager Communication ---");
+        System.out.println("\n--- [Query 9] Direct EntityManager Communication ---");
 
         String jpql = "SELECT e FROM Employee e WHERE e.baseSalary >= :minSalary";
         TypedQuery<Employee> query = entityManager.createQuery(jpql, Employee.class);

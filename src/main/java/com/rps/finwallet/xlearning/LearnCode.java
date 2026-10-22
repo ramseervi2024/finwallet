@@ -21,7 +21,8 @@ public class LearnCode {
                 new HashMapPractice(),
                 new StreamPractice(),
                 new StringPractice(),
-                new JpaSqlPractice()
+                new JpaSqlPractice(),
+                new JpaMasterGuide()
         );
 
         System.out.println("\n=======================================================");
