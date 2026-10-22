@@ -7,6 +7,7 @@ import com.rps.finwallet.controller.*;
 import com.rps.finwallet.dto.*;
 import com.rps.finwallet.exception.*;
 
+import com.rps.finwallet.xlearning.LearnCode;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -16,19 +17,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
-@EnableCaching  // Step 1: Activate Spring's caching engine
+@EnableCaching // Step 1: Activate Spring's caching engine
 @OpenAPIDefinition(info = @Info(title = "Finwallet API", version = "1.0", description = "API Documentation for Finwallet Application"))
-@SecurityScheme(
-    name = "Bearer Authentication",
-    type = SecuritySchemeType.HTTP,
-    bearerFormat = "JWT",
-    scheme = "bearer"
-)
+@SecurityScheme(name = "Bearer Authentication", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class FinwalletApplication {
 
-	public static void main(String[] args) {
-		System.out.println("SYSTEM START HERE");
-		SpringApplication.run(FinwalletApplication.class, args);
-	}
+    public static void main(String[] args) {
+        System.out.println("SYSTEM START HERE");
+        LearnCode.runAll();
+
+        SpringApplication.run(FinwalletApplication.class, args);
+    }
 
 }
