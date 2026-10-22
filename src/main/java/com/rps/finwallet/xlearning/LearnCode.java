@@ -20,7 +20,8 @@ public class LearnCode {
                 new HashSetPractice(),
                 new HashMapPractice(),
                 new StreamPractice(),
-                new StringPractice()
+                new StringPractice(),
+                new JpaSqlPractice()
         );
 
         System.out.println("\n=======================================================");
