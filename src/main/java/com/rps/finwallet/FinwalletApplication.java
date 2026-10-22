@@ -27,6 +27,7 @@ import org.springframework.cache.annotation.EnableCaching;
 public class FinwalletApplication {
 
 	public static void main(String[] args) {
+		System.out.println("SYSTEM START HERE");
 		SpringApplication.run(FinwalletApplication.class, args);
 	}
 
