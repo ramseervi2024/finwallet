@@ -24,7 +24,8 @@ public class LearnCode {
                 new JpaSqlPractice(),
                 new JpaMasterGuide(),
                 new JpaRelationshipGuide(),
-                new AopPractice()
+                new AopPractice(),
+                new MvcPractice()
         );
 
         System.out.println("\n=======================================================");
