@@ -1,0 +1,474 @@
+/* ==========================================================================
+   JAVA FULL-STACK INTERVIEW HANDBOOK - PDF STYLESHEET
+   Optimized for: https://apitemplate.io/pdf-tools/convert-markdown-to-pdf/
+   HIGH DENSITY + XEROX PAPER SAVING + DISTINCT VISUAL HIERARCHY
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Fira+Code:wght@500;600;700&display=swap');
+
+/* =========================================
+   PAGE SETUP (A4 HIGH-DENSITY PRINT)
+   Tight 10mm margins to maximize printable area and save paper
+   ========================================= */
+
+@page {
+    size: A4;
+    margin: 10mm 12mm 10mm 12mm;
+}
+
+/* =========================================
+   GLOBAL RESET & COMPACT TYPOGRAPHY
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 13.5px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+body {
+    font-family: 'Barlow', Arial, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #ffffff;
+    color: #1e293b;
+    margin: 0;
+    padding: 0;
+    font-size: 0.89rem;
+    font-weight: 600;
+    line-height: 1.22;
+}
+
+/* =========================================
+   H1 — MAIN DOCUMENT TITLE
+   ========================================= */
+
+h1 {
+    font-size: 1.35rem;
+    line-height: 1.15;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+    padding-bottom: 0.3rem;
+    border-bottom: 2.5px solid #2563eb;
+
+    page-break-after: avoid;
+    break-after: avoid;
+}
+
+/* =========================================
+   H2 — MAIN MODULE HEADER (DISTINCT BANNER & DIVIDER)
+   ========================================= */
+
+h2 {
+    font-size: 1.15rem;
+    line-height: 1.18;
+    font-weight: 700;
+    color: #0f172a;
+
+    /* Controlled spacing: distinct separation without wasting paper */
+    margin-top: 1.25rem;
+    margin-bottom: 0.45rem;
+
+    padding: 5px 9px;
+    background: #f1f5f9;
+    border-left: 5px solid #1d4ed8;
+    border-bottom: 1.5px solid #cbd5e1;
+    border-radius: 3px;
+
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    break-after: avoid;
+    break-inside: avoid;
+}
+
+/* =========================================
+   H3 — TOPIC HEADINGS (e.g. 1. Complete Explanation)
+   ========================================= */
+
+h3 {
+    font-size: 1.0rem;
+    line-height: 1.18;
+    font-weight: 700;
+    color: #0f172a;
+
+    margin-top: 0.85rem;
+    margin-bottom: 0.35rem;
+
+    padding: 3px 7px;
+    background: #f8fafc;
+    border-left: 3.5px solid #0284c7;
+    border-bottom: 1px solid #e2e8f0;
+    border-radius: 2px;
+
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    break-after: avoid;
+    break-inside: avoid;
+}
+
+/* =========================================
+   H4 — SUB-TOPICS & INTERVIEW TIERS
+   ========================================= */
+
+h4 {
+    font-size: 0.94rem;
+    line-height: 1.18;
+    font-weight: 700;
+    color: #1e293b;
+
+    margin-top: 0.75rem;
+    margin-bottom: 0.25rem;
+
+    padding-bottom: 2px;
+    border-bottom: 1px dashed #94a3b8;
+
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    break-after: avoid;
+    break-inside: avoid;
+}
+
+/* =========================================
+   H5 — INDIVIDUAL QUESTION HEADINGS
+   ========================================= */
+
+h5 {
+    font-size: 0.91rem;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #0f172a;
+
+    margin-top: 0.65rem;
+    margin-bottom: 0.22rem;
+
+    padding: 2.5px 6px;
+    background: #f8fafc;
+    border-left: 3px solid #4f46e5;
+    border-radius: 0 3px 3px 0;
+
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    break-after: avoid;
+    break-inside: avoid;
+}
+
+/* =========================================
+   PARAGRAPHS & EMPHASIS
+   ========================================= */
+
+p {
+    font-size: 0.89rem;
+    line-height: 1.22;
+    font-weight: 600;
+    margin: 0.18rem 0;
+    orphans: 2;
+    widows: 2;
+}
+
+strong,
+b {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+em,
+i {
+    font-style: italic;
+    color: #334155;
+}
+
+/* =========================================
+   LISTS (COMPACT VERTICAL RHYTHM)
+   ========================================= */
+
+ul,
+ol {
+    margin-top: 0.12rem;
+    margin-bottom: 0.22rem;
+    margin-left: 1.1rem;
+    padding-left: 0.4rem;
+    page-break-inside: auto;
+    break-inside: auto;
+}
+
+li {
+    font-size: 0.88rem;
+    line-height: 1.2;
+    font-weight: 600;
+    margin: 0.08rem 0;
+    padding-left: 0.05rem;
+}
+
+ul ul,
+ol ol,
+ul ol,
+ol ul {
+    margin-top: 0.05rem;
+    margin-bottom: 0.05rem;
+    margin-left: 0.9rem;
+}
+
+/* =========================================
+   HORIZONTAL DIVIDER
+   ========================================= */
+
+hr {
+    border: 0;
+    border-top: 1.5px solid #cbd5e1;
+    margin: 1.0rem 0 0.65rem 0;
+}
+
+/* =========================================
+   CODE BLOCKS (COMPACT & PRE-WRAPPED)
+   ========================================= */
+
+pre {
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid #0f172a;
+    border-radius: 3px;
+    padding: 5px 8px;
+    margin: 0.3rem 0 0.4rem 0;
+
+    font-family: 'Fira Code', 'SFMono-Regular', Consolas, Monaco, monospace;
+    font-size: 0.74rem;
+    line-height: 1.18;
+    font-weight: 600;
+
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* =========================================
+   INLINE CODE
+   ========================================= */
+
+code {
+    font-family: 'Fira Code', 'SFMono-Regular', Consolas, Monaco, monospace;
+    font-size: 0.85em;
+    font-weight: 600;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+:not(pre) > code {
+    background: #f1f5f9;
+    color: #b91c1c;
+    padding: 1px 4px;
+    border-radius: 2px;
+    border: 1px solid #e2e8f0;
+    font-weight: 700;
+}
+
+/* =========================================
+   BLOCKQUOTES & CALLOUT BOXES
+   CRITICAL FOR SAVING PAPER: Must allow break-inside so questions
+   flow naturally across pages without leaving huge empty gaps!
+   ========================================= */
+
+blockquote {
+    border-left: 3px solid #94a3b8;
+    background: #f8fafc;
+    margin: 0.2rem 0 0.3rem 0;
+    padding: 0.2rem 0.65rem;
+    border-radius: 0 3px 3px 0;
+
+    color: #334155;
+    font-size: 0.88rem;
+    line-height: 1.22;
+    font-weight: 600;
+
+    /* ALLOW natural page flow: avoids massive blank gaps at page bottoms! */
+    page-break-inside: auto;
+    break-inside: auto;
+}
+
+blockquote > p {
+    margin: 0.12rem 0;
+}
+
+blockquote > p:first-child {
+    margin-top: 0;
+}
+
+blockquote > p:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================================
+   TABLES (COMPACT ROW HEIGHTS)
+   ========================================= */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.35rem 0;
+    font-size: 0.8rem;
+    line-height: 1.18;
+    font-weight: 600;
+
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+th,
+td {
+    border: 1px solid #cbd5e1;
+    padding: 3px 6px;
+    text-align: left;
+    vertical-align: top;
+    font-weight: 600;
+}
+
+th {
+    background: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+}
+
+tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+tr:nth-child(even) {
+    background: #fcfcfd;
+}
+
+/* =========================================
+   IMAGES
+   ========================================= */
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0.3rem auto;
+
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* =========================================
+   LINKS
+   ========================================= */
+
+a {
+    color: #2563eb;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+   PAGE FLOW & ORPHAN AVOIDANCE
+   Only prevent orphan headers; DO NOT block body content from breaking!
+   ========================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    page-break-after: avoid;
+    break-after: avoid;
+}
+
+/* Keep heading with its first immediate element */
+h2 + h3,
+h3 + h4,
+h4 + h5,
+h5 + blockquote,
+h5 + p {
+    page-break-before: avoid;
+    break-before: avoid;
+}
+
+/* =========================================
+   PRINT MEDIA RULES (XEROX & PDF OPTIMIZED)
+   ========================================= */
+
+@media print {
+    html {
+        font-size: 13.5px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    body {
+        background: #ffffff;
+        color: #1e293b;
+        padding: 0;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    /* Ensure blockquotes and lists can break across pages to fill every page fully */
+    blockquote,
+    ul,
+    ol {
+        page-break-inside: auto !important;
+        break-inside: auto !important;
+    }
+
+    h2 {
+        background: #f1f5f9 !important;
+        border-left: 5px solid #1d4ed8 !important;
+        border-bottom: 1.5px solid #cbd5e1 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    h3 {
+        background: #f8fafc !important;
+        border-left: 3.5px solid #0284c7 !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    h5 {
+        background: #f8fafc !important;
+        border-left: 3px solid #4f46e5 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    pre {
+        background: #1e293b !important;
+        color: #f8fafc !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    blockquote {
+        background: #f8fafc !important;
+        border-left: 3px solid #94a3b8 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    th {
+        background: #f1f5f9 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    a {
+        color: #1e293b;
+        text-decoration: none;
+    }
+}
